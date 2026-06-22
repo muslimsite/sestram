@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #FBF6F3; }
+  ::selection { background: #F5E1E4; }
+  a { text-decoration: none; color: inherit; }
+
+  /* Premium scroll reveal */
+  .reveal { opacity: 0; transform: translateY(36px); transition: opacity 1.05s cubic-bezier(.22,.61,.36,1), transform 1.05s cubic-bezier(.22,.61,.36,1); will-change: opacity, transform; }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal-delay-1 { transition-delay: .08s; }
+  .reveal-delay-2 { transition-delay: .18s; }
+  .reveal-delay-3 { transition-delay: .28s; }
+  .reveal-delay-4 { transition-delay: .38s; }
+  .reveal-delay-5 { transition-delay: .48s; }
+
+  /* Avatar entrance + idle float */
+  @keyframes avatarIn { from { opacity: 0; transform: translateY(40px) scale(.92); } to { opacity: 1; transform: none; } }
+  @keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+  @keyframes blobMorph {
+    0%,100% { border-radius: 50% 50% 48% 52% / 52% 50% 50% 48%; transform: rotate(0deg) scale(1); }
+    33%     { border-radius: 46% 54% 52% 48% / 48% 56% 44% 52%; transform: rotate(4deg) scale(1.02); }
+    66%     { border-radius: 52% 48% 56% 44% / 54% 46% 54% 46%; transform: rotate(-3deg) scale(.99); }
+  }
+  @keyframes blobGlow {
+    0%,100% { opacity: .55; transform: scale(1); }
+    50%     { opacity: .85; transform: scale(1.08); }
+  }
+  .avatar-stage { animation: avatarIn 1.4s cubic-bezier(.22,.61,.36,1) both; }
+  .avatar-float { animation: floatY 7s ease-in-out infinite; }
+  .avatar-blob  { animation: blobMorph 14s ease-in-out infinite; }
+  .avatar-glow  { animation: blobGlow 8s ease-in-out infinite; }
+
+  /* Hero headline shimmer-in */
+  @keyframes wordRise { from { opacity: 0; transform: translateY(60%); } to { opacity: 1; transform: none; } }
+  .hero-word { display: inline-block; animation: wordRise 1.1s cubic-bezier(.22,.61,.36,1) both; }
+
+  /* Card hover lift */
+  .card-lift { transition: transform .5s cubic-bezier(.22,.61,.36,1), box-shadow .5s cubic-bezier(.22,.61,.36,1), border-color .4s ease; }
+  .card-lift:hover { transform: translateY(-6px); box-shadow: 0 28px 50px -28px rgba(28,26,25,.28); }
+
+  .featured-lift { transition: transform .55s cubic-bezier(.22,.61,.36,1), box-shadow .55s cubic-bezier(.22,.61,.36,1); }
+  .featured-lift:hover { transform: translateY(-5px); box-shadow: 0 40px 60px -30px rgba(28,26,25,.45); }
+
+  /* Arrow nudge */
+  .arrow-nudge svg { transition: transform .45s cubic-bezier(.22,.61,.36,1); }
+  a:hover .arrow-nudge svg { transform: translateX(6px); }
+
+  /* Italic display divider */
+  @keyframes lineGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .accent-line { display: inline-block; height: 1px; background: #B26E7A; transform-origin: left center; animation: lineGrow 1.2s cubic-bezier(.22,.61,.36,1) .2s both; }
+
+  /* ── Mobile ── */
+  @media (max-width: 700px) {
+    .hero-grid {
+      grid-template-columns: 1fr !important;
+      padding-top: 28px !important;
+      padding-bottom: 20px !important;
+    }
+    .hero-avatar { order: -1; }
+    .header-site-link { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .hero-word { opacity: 1 !important; transform: none !important; transition: none !important; animation: none !important; }
+    .avatar-stage, .avatar-float, .avatar-blob, .avatar-glow { animation: none !important; }
+  }
+</style>
+</helmet>
+
+<div style="font-family: 'Manrope', sans-serif; color: #1C1A19; background: #FBF6F3; min-height: 100vh; overflow-x: hidden;">
+
+  <!-- HEADER -->
+  <header style="position: sticky; top: 0; z-index: 40; background: rgba(251,246,243,0.86); backdrop-filter: blur(12px); border-bottom: 1px solid #ECE3DF;">
+    <div style="width: min(1180px, 92vw); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px;">
+      <button onClick="{{ toggleMenu }}" aria-label="Меню" style="display: flex; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; margin-left: -8px;">
+        <span style="display: block; width: 26px; height: 1.5px; background: #1C1A19;"></span>
+        <span style="display: block; width: 26px; height: 1.5px; background: #1C1A19;"></span>
+        <span style="display: block; width: 18px; height: 1.5px; background: #1C1A19;"></span>
+      </button>
+      <a href="#top" style="font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 600; letter-spacing: 0.04em;">Сёстрам</a>
+      <a href="https://sestram.com" class="header-site-link" style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #8A817C;">Sestram.com</a>
+    </div>
+  </header>
+
+  <!-- MENU OVERLAY -->
+  <div style="{{ overlayStyle }}" onClick="{{ closeMenu }}">
+    <div style="{{ menuPanelStyle }}">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 48px;">
+        <span style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600;">Сёстрам</span>
+        <button onClick="{{ closeMenu }}" aria-label="Закрыть" style="background: none; border: none; font-size: 30px; line-height: 1; cursor: pointer; color: #1C1A19;">×</button>
+      </div>
+      <nav style="display: flex; flex-direction: column; gap: 4px;">
+        <a href="#about" onClick="{{ closeMenu }}" style="font-family: 'Playfair Display', serif; font-size: clamp(28px, 7vw, 40px); padding: 10px 0; border-bottom: 1px solid #F0E6E2;">Обо&nbsp;мне</a>
+        <a href="#projects" onClick="{{ closeMenu }}" style="font-family: 'Playfair Display', serif; font-size: clamp(28px, 7vw, 40px); padding: 10px 0; border-bottom: 1px solid #F0E6E2;">Мои&nbsp;продукты</a>
+        <a href="#checklists" onClick="{{ closeMenu }}" style="font-family: 'Playfair Display', serif; font-size: clamp(28px, 7vw, 40px); padding: 10px 0; border-bottom: 1px solid #F0E6E2;">Гайды</a>
+        <a href="#spravochnik" onClick="{{ closeMenu }}" style="font-family: 'Playfair Display', serif; font-size: clamp(28px, 7vw, 40px); padding: 10px 0; border-bottom: 1px solid #F0E6E2;">Справочник постящейся</a>
+        <a href="#otzyvy" onClick="{{ closeMenu }}" style="font-family: 'Playfair Display', serif; font-size: clamp(28px, 7vw, 40px); padding: 10px 0;">Отзывы</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section id="top" class="hero-grid" style="width: min(1240px, 94vw); margin: 0 auto; padding: clamp(40px, 7vw, 90px) 0 clamp(40px, 6vw, 80px); display: grid; grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.05fr); gap: clamp(32px, 5vw, 80px); align-items: center;">
+    <div>
+      <div style="display: flex; align-items: center; gap: 14px; margin: 0 0 28px;">
+        <span class="accent-line" style="width: 56px;"></span>
+        <span style="font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: #B26E7A;">Образовательный проект</span>
+      </div>
+      <h1 style="font-family: 'Playfair Display', serif; font-weight: 500; font-size: clamp(56px, 11vw, 116px); line-height: 0.96; margin: 0 0 28px; letter-spacing: -0.015em;">
+        <span style="display: block; overflow: hidden; padding: 0.12em 0.04em 0.18em; margin: -0.12em -0.04em -0.18em;"><span class="hero-word" style="animation-delay: .1s;">Сёстрам</span></span>
+      </h1>
+      <p class="reveal reveal-delay-3" style="font-size: clamp(17px, 2.3vw, 22px); line-height: 1.55; color: #5C5653; max-width: 32ch; margin: 0 0 38px;">Уроки и вебинары для сестёр от Солихи&nbsp;Умм&nbsp;Мусы, админа Sestram.com.</p>
+      <div class="reveal reveal-delay-4" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+        <a href="https://t.me/sestram" aria-label="Telegram" style="display: grid; place-items: center; width: 48px; height: 48px; border-radius: 999px; border: 1px solid #E4D6D1; color: #1C1A19; transition: background .35s ease, border-color .35s ease, transform .35s ease;" style-hover="background:#F5E1E4; border-color:#F5E1E4; transform: translateY(-2px);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4 11 13"></path><path d="M22 4 15 21l-4-8-8-4 19-5Z"></path></svg>
+        </a>
+        <a href="https://instagram.com/sestramcom" aria-label="Instagram" style="display: grid; place-items: center; width: 48px; height: 48px; border-radius: 999px; border: 1px solid #E4D6D1; color: #1C1A19; transition: background .35s ease, border-color .35s ease, transform .35s ease;" style-hover="background:#F5E1E4; border-color:#F5E1E4; transform: translateY(-2px);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.9" fill="currentColor" stroke="none"></circle></svg>
+        </a>
+        <a href="https://wa.me/79164356005" aria-label="WhatsApp" style="display: grid; place-items: center; width: 48px; height: 48px; border-radius: 999px; border: 1px solid #E4D6D1; color: #1C1A19; transition: background .35s ease, border-color .35s ease, transform .35s ease;" style-hover="background:#F5E1E4; border-color:#F5E1E4; transform: translateY(-2px);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 1.8c2.17 0 4.21.85 5.75 2.38a8.08 8.08 0 0 1 2.38 5.74c0 4.48-3.65 8.12-8.13 8.12a8.1 8.1 0 0 1-4.13-1.13l-.3-.18-3.12.82.83-3.04-.19-.31a8.06 8.06 0 0 1-1.24-4.32c0-4.48 3.65-8.12 8.12-8.12Zm-4.6 4.4c-.22 0-.57.08-.87.41-.3.33-1.14 1.11-1.14 2.71s1.17 3.15 1.33 3.36c.16.22 2.27 3.47 5.5 4.86.77.33 1.37.53 1.84.68.77.24 1.47.21 2.03.13.62-.09 1.9-.78 2.17-1.53.27-.75.27-1.39.19-1.53-.08-.13-.3-.21-.62-.37-.33-.16-1.9-.94-2.2-1.05-.3-.11-.51-.16-.73.16-.22.33-.84 1.05-1.03 1.27-.19.22-.38.24-.7.08-.33-.16-1.37-.5-2.61-1.61-.96-.86-1.61-1.92-1.8-2.25-.19-.33-.02-.5.14-.66.15-.15.33-.38.49-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.73-1.77-1.01-2.42-.27-.64-.54-.55-.73-.56-.19-.01-.41-.01-.62-.01Z"></path></svg>
+        </a>
+        <span style="font-size: 14px; color: #8A817C; margin-left: 6px;">Найдите меня в&nbsp;соцсетях</span>
+      </div>
+    </div>
+    <div class="avatar-stage hero-avatar" style="display: flex; justify-content: center;">
+      <div style="position: relative; width: min(560px, 92%); aspect-ratio: 1 / 1;">
+        <div class="avatar-glow" style="position: absolute; inset: -8%; background: radial-gradient(circle at 50% 50%, rgba(245,225,228,0.95) 0%, rgba(245,225,228,0) 70%); filter: blur(4px);"></div>
+        <div class="avatar-blob avatar-float" style="position: absolute; inset: 0; background: #F5E1E4; border-radius: 50% 50% 48% 52% / 52% 50% 50% 48%; overflow: hidden;">
+          <img src="assets/avatar-cut.png" alt="Солиха Умм Муса" style="position: absolute; left: 50%; top: 50%; width: 152%; height: auto; transform: translate(-50%, -53%);">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" style="background: #FFFFFF; border-top: 1px solid #ECE3DF; border-bottom: 1px solid #ECE3DF;">
+    <div style="width: min(1180px, 92vw); margin: 0 auto; padding: clamp(56px, 8vw, 110px) 0;">
+      <p class="reveal" style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #B26E7A; margin: 0 0 clamp(36px, 5vw, 56px);">Обо мне</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: clamp(40px, 6vw, 90px);">
+        <div class="reveal reveal-delay-1">
+          <h2 style="font-family: 'Playfair Display', serif; font-weight: 500; font-size: clamp(30px, 4.5vw, 46px); line-height: 1.12; margin: 0 0 24px;">Сёстрам — проект об&nbsp;Исламе для&nbsp;мусульманок</h2>
+          <p style="font-size: clamp(16px, 2vw, 19px); line-height: 1.7; color: #5C5653; margin: 0 0 18px;">Я основала его в&nbsp;2009 году как образовательный сайт для&nbsp;мусульманок Sestram.com.</p>
+          <p style="font-size: clamp(16px, 2vw, 19px); line-height: 1.7; color: #5C5653; margin: 0;">Уже более 10&nbsp;лет я&nbsp;обучаю и&nbsp;вдохновляю сестёр трудиться, чтобы жить осознанно, а&nbsp;не&nbsp;просто плыть по&nbsp;течению, и&nbsp;в&nbsp;конечном счёте — возродить нашу Умму.</p>
+        </div>
+        <div class="reveal reveal-delay-3">
+          <h3 style="font-family: 'Playfair Display', serif; font-weight: 500; font-size: clamp(22px, 3vw, 28px); margin: 0 0 28px;">Автор — Солиха Умм Муса</h3>
+          <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 20px;">
+            <li style="display: flex; gap: 16px; align-items: flex-start;">
+              <span style="flex: none; width: 7px; height: 7px; border-radius: 999px; background: #B26E7A; margin-top: 9px;"></span>
+              <span style="font-size: clamp(15px, 1.9vw, 18px); line-height: 1.6; color: #5C5653;">Русская мусульманка, приняла Ислам в&nbsp;16 и&nbsp;отстояла своё право исповедовать свою религию несмотря ни&nbsp;на&nbsp;что.</span>
+            </li>
+            <li style="display: flex; gap: 16px; align-items: flex-start;">
+              <span style="flex: none; width: 7px; height: 7px; border-radius: 999px; background: #B26E7A; margin-top: 9px;"></span>
+              <span style="font-size: clamp(15px, 1.9vw, 18px); line-height: 1.6; color: #5C5653;">Мама шестерых детей.</span>
+            </li>
+            <li style="display: flex; gap: 16px; align-items: flex-start;">
+              <span style="flex: none; width: 7px; height: 7px; border-radius: 999px; background: #B26E7A; margin-top: 9px;"></span>
+              <span style="font-size: clamp(15px, 1.9vw, 18px); line-height: 1.6; color: #5C5653;">Требующая знания: марказ арабского языка и&nbsp;курс таджвида в&nbsp;Египте, шариатская академия ZAD шейха Мунаджида; сейчас учусь в&nbsp;Мединском Исламском Университете онлайн.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <p style="font-size: clamp(15px, 1.9vw, 18px); line-height: 1.7; color: #8A817C; max-width: 60ch; margin: clamp(40px, 5vw, 60px) 0 0;">На&nbsp;этом сайте собраны мои бесплатные и&nbsp;платные уроки и&nbsp;вебинары для&nbsp;сестёр, а&nbsp;также все мои другие проекты.</p>
+    </div>
+  </section>
+
+  <!-- PROJECTS FEED -->
+  <section id="projects" style="width: min(1180px, 92vw); margin: 0 auto; padding: clamp(56px, 8vw, 110px) 0 clamp(30px, 4vw, 50px); scroll-margin-top: 80px;">
+    <div class="reveal" style="text-align: center; margin-bottom: clamp(44px, 6vw, 72px);">
+      <p style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #B26E7A; margin: 0 0 16px;">Проекты</p>
+      <h2 style="font-family: 'Playfair Display', serif; font-weight: 500; font-style: italic; font-size: clamp(34px, 6vw, 64px); margin: 0;">Идеальный момент — сейчас</h2>
+    </div>
+
+    <!-- Featured course -->
+    <!-- All courses grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(20px, 3vw, 32px);">
+
+      <!-- Дисциплина -->
+      <a href="https://muslimsite.github.io/distciplina/#top" target="_blank" rel="noopener" class="reveal reveal-delay-1 arrow-nudge" style="display: block;">
+        <article class="card-lift" style="height: 100%; background: #FFFFFF; border: 1px solid #ECE3DF; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column;" style-hover="border-color:#E0CBCF;">
+          <div style="position: relative; height: clamp(190px, 24vw, 240px); overflow: hidden; background: #0E0D11;">
+            <img src="assets/title-disciplina.png" alt="Дисциплина от А до Я" style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
+            <span style="position: absolute; top: 18px; left: 18px; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; background: linear-gradient(135deg,#F8DA8C,#E6B23C); color: #0A0A0C; font-weight: 700; padding: 7px 14px; border-radius: 999px;">Интенсив</span>
+          </div>
+          <div style="padding: clamp(22px, 3vw, 32px); display: flex; flex-direction: column; flex: 1;">
+            <span style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #B26E7A; margin-bottom: 14px;">2 недели</span>
+            <h3 style="font-family: 'Playfair Display', serif; font-weight: 500; font-size: clamp(20px, 2.6vw, 26px); line-height: 1.1; margin: 0 0 12px;">Дисциплина от&nbsp;А до&nbsp;Я</h3>
+            <p style="font-size: 14px; line-height: 1.6; color: #5C5653; margin: 0 0 20px; flex: 1;">Система порядка в&nbsp;делах, времени и&nbsp;душе — чтобы довести начатое до&nbsp;конца ради Аллаха.</p>
+            <span style="display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: #1C1A19; font-weight: 600;">Подробнее
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
+            </span>
+          </div>
+        </article>
+      </a>
+
+      <!-- Воспитание -->
+      <a href="https://deti-sestram.com" target="_blank" rel="noopener" class="reveal reveal-delay-2 arrow-nudge" style="display: block;">
+        <article class="card-lift" style="height: 100%; background: #FFFFFF; border: 1px solid #ECE3DF; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column;" style-hover="border-color:#E0CBCF;">
+          <div style="position: relative; height: clamp(190px, 24vw, 240px); overflow: hidden;">
+            <img src="assets/cover-deti.jpeg" alt="Воспитание детей в Исламе" style="width: 100%; height: 100%; object-fit: cover; object-position: center center;">
+            <span style="position: absolute; top: 18px; left: 18px; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; background: #1C1A19; color: #FBF6F3; padding: 7px 14px; border-radius: 999px;">Авторский курс</span>
+          </div>
+          <div style="padding: clamp(22px, 3vw, 32px); display: flex; flex-direction: column; flex: 1;">
+            <span style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #B26E7A; margin-bottom: 14px;">4,5–5 месяцев</span>
+            <h3 style="font-family: 'Playfair Display', serif; font-weight: 500; font-size: clamp(20px, 2.6vw, 26px); line-height: 1.1; margin: 0 0 12px;">Воспитание детей в&nbsp;Исламе</h3>
+            <p style="font-size: 14px; line-height: 1.6; color: #5C5653; margin: 0 0 20px; flex: 1;">Достоверные шариатские знания и&nbsp;живой опыт мамы шестерых детей — как вырастить праведное поколение.</p>
+            <span style="display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: #1C1A19;">Подробнее
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
+            </span>
+          </div>
+        </article>
+      </a>
+
+      <!-- Фаджр -->
+      <a href="https://fajr-sestram.com" target="_blank" rel="noopener" class="reveal reveal-delay-3 arrow-nudge" style="display: block;">
+        <article class="card-lift" style="height: 100%; background: #FFFFFF; border: 1px solid #ECE3DF; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column;" style-hover="border-color:#E0CBCF;">
+          <div style="position: relative; height: clamp(190px, 24vw, 240px); overflow: hidden;">
+            <img src="assets/cover-fajr.jpeg" alt="Вставай на фаджр" style="width: 100%; height: 100%; object-fit: cover; object-position: center 55%;">
+            <span style="position: absolute; top: 18px; left: 18px; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; background: #1C1A19; color: #FBF6F3; padding: 7px 14px; border-radius: 999px;">Авторский курс</span>
+          </div>
+          <div style="padding: clamp(22px, 3vw, 32px); display: flex; flex-direction: column; flex: 1;">
+            <span style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #B26E7A; margin-bottom: 14px;">2–3 недели</span>
+            <h3 style="font-family: 'Playfair Display', serif; font-weight: 500; font-size: clamp(20px, 2.6vw, 26px); line-height: 1.1; margin: 0 0 12px;">Вставай на&nbsp;фаджр</h3>
+            <p style="font-size: 14px; line-height: 1.6; color: #5C5653; margin: 0 0 20px; flex: 1;">Наладьте режим и&nbsp;получите самое благодатное время суток — для&nbsp;поклонения, учёбы, семьи и&nbsp;себя.</p>
+            <span style="display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: #1C1A19;">Подробнее
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
+            </span>
+          </div>
+        </article>
+      </a>
+
+      <!-- Акыда -->
+      <a href="Lessons.dc.html" class="reveal reveal-delay-4 arrow-nudge" style="display: block;">
+        <article class="card-lift" style="height: 100%; background: #FFFFFF; border: 1px solid #ECE3DF; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column;" style-hover="border-color:#E0CBCF;">
+          <div style="position: relative; height: clamp(190px, 24vw, 240px); overflow: hidden;">
+            <img src="assets/cover-akyda.jpeg" alt="Основы акыды" style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
+            <span style="position: absolute; top: 18px; left: 18px; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; background: #1C1A19; color: #FBF6F3; padding: 7px 14px; border-radius: 999px;">Бесплатно</span>
+          </div>
+          <div style="padding: clamp(22px, 3vw, 32px); display: flex; flex-direction: column; flex: 1;">
+            <span style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #B26E7A; margin-bottom: 14px;">Только для женщин</span>
+            <h3 style="font-family: 'Playfair Display', serif; font-weight: 500; font-size: clamp(20px, 2.6vw, 26px); line-height: 1.1; margin: 0 0 12px;">Основы акыды</h3>
+            <p style="font-size: 14px; line-height: 1.6; color: #5C5653; margin: 0 0 20px; flex: 1;">Бесплатные лекции по&nbsp;исламскому вероубеждению по&nbsp;книге «Три основы» — для&nbsp;сестёр и&nbsp;женщин, интересующихся Исламом.</p>
+            <span style="display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: #1C1A19;">Подробнее
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
+            </span>
+          </div>
+        </article>
+      </a>
+
+    </div>
+
+
+  </section>
+
+  <!-- GUIDES -->
+  <section id="checklists" style="background: #FBF6F3; border-top: 1px solid #ECE3DF; border-bottom: 1px solid #ECE3DF; scroll-margin-top: 80px;">
+    <div style="width: min(1180px, 92vw); margin: 0 auto; padding: clamp(56px, 8vw, 110px) 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: clamp(40px, 6vw, 84px); align-items: center;">
+
+      <!-- Slideshow -->
+      <div class="reveal" style="display: flex; flex-direction: column; align-items: center; gap: 24px;">
+        <div style="position: relative; width: min(300px, 80%);">
+          <div style="position: relative; width: 100%; aspect-ratio: 900 / 1273; border-radius: 14px; overflow: hidden; background: #F4ECE6; box-shadow: 0 34px 64px -30px rgba(28,26,25,0.55);">
+            <img src="assets/guide1.png" alt="5 причин по которым ты ничего не успеваешь" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .55s ease; opacity: {{ gop0 }};">
+            <img src="assets/guide2.png" alt="Как выполнять запланированное" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .55s ease; opacity: {{ gop1 }};">
+            <img src="assets/guide3.png" alt="Как победить прокрастинацию" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .55s ease; opacity: {{ gop2 }};">
+            <img src="assets/guide4.png" alt="Как вставать рано" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .55s ease; opacity: {{ gop3 }};">
+            <img src="assets/guide5.png" alt="Мои секреты продуктивности" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .55s ease; opacity: {{ gop4 }};">
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <button onClick="{{ prevGuide }}" aria-label="Предыдущий гайд" style="display: grid; place-items: center; width: 46px; height: 46px; border-radius: 999px; border: 1px solid #E4D6D1; background: #FBF6F3; color: #1C1A19; cursor: pointer; transition: background .25s, border-color .25s;" style-hover="background:#F5E1E4; border-color:#F5E1E4;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+          </button>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <sc-for list="{{ guideDots }}" as="d" hint-placeholder-count="5">
+              <button onClick="{{ d.onClick }}" aria-label="Гайд" style="{{ d.style }}"></button>
+            </sc-for>
+          </div>
+          <button onClick="{{ nextGuide }}" aria-label="Следующий гайд" style="display: grid; place-items: center; width: 46px; height: 46px; border-radius: 999px; border: 1px solid #E4D6D1; background: #FBF6F3; color: #1C1A19; cursor: pointer; transition: background .25s, border-color .25s;" style-hover="background:#F5E1E4; border-color:#F5E1E4;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+          </button>
+        </div>
+        <span style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #B26E7A;">{{ guideCap }}</span>
+      </div>
+
+      <!-- Description + email -->
+      <div class="reveal reveal-delay-1">
+        <span style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #B26E7A;">Гайды · бесплатно</span>
+        <h2 style="font-family: 'Playfair Display', serif; font-weight: 500; font-size: clamp(30px, 4.5vw, 48px); line-height: 1.06; margin: 16px 0 6px;">Гайды по&nbsp;планированию</h2>
+        <p style="font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(17px, 2.2vw, 22px); color: #8A817C; margin: 0 0 22px;">5 бесплатных материалов для&nbsp;сестёр</p>
+        <p style="font-size: clamp(15px, 1.95vw, 18px); line-height: 1.65; color: #5C5653; margin: 0 0 22px; max-width: 46ch;">Я создала эти практические руководства по&nbsp;планированию, продуктивности и&nbsp;управлению временем. Введите почту — получите все&nbsp;5&nbsp;гайдов бесплатно.</p>
+        <ul style="list-style: none; margin: 0 0 30px; padding: 0; display: flex; flex-wrap: wrap; gap: 10px;">
+          <li style="font-size: 13px; color: #5C5653; background: #FAEDEF; border-radius: 999px; padding: 8px 16px;">5 причин не успевать</li>
+          <li style="font-size: 13px; color: #5C5653; background: #FAEDEF; border-radius: 999px; padding: 8px 16px;">Как выполнять планы</li>
+          <li style="font-size: 13px; color: #5C5653; background: #FAEDEF; border-radius: 999px; padding: 8px 16px;">Победить прокрастинацию</li>
+          <li style="font-size: 13px; color: #5C5653; background: #FAEDEF; border-radius: 999px; padding: 8px 16px;">Вставать рано</li>
+          <li style="font-size: 13px; color: #5C5653; background: #FAEDEF; border-radius: 999px; padding: 8px 16px;">Секреты продуктивности</li>
+        </ul>
+        <form onSubmit="{{ onSubmitEmail }}" style="display: flex; flex-wrap: wrap; gap: 10px; max-width: 460px;">
+          <input type="email" required="" placeholder="Ваша почта" style="flex: 1 1 200px; font-family: 'Manrope', sans-serif; font-size: 15px; padding: 15px 18px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; outline: none;">
+          <button type="submit" style="flex: 0 0 auto; font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 600; padding: 15px 26px; border: none; border-radius: 12px; background: #1C1A19; color: #FBF6F3; cursor: pointer; transition: background .25s;" style-hover="background:#B26E7A;">Получить гайды</button>
+        </form>
+        <p style="font-size: 13px; color: #B0A8A2; margin: 14px 0 0;">Все 5 гайдов придут на&nbsp;вашу почту. Листайте превью в карточке</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- HANDBOOK -->
+  <section id="spravochnik" style="background: #FFFFFF; border-top: 1px solid #ECE3DF; border-bottom: 1px solid #ECE3DF; scroll-margin-top: 80px;">
+    <div style="width: min(1180px, 92vw); margin: 0 auto; padding: clamp(56px, 8vw, 110px) 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: clamp(40px, 6vw, 84px); align-items: center;">
+
+      <!-- Flip slideshow of cover + содержание -->
+      <div class="reveal" style="display: flex; flex-direction: column; align-items: center; gap: 24px;">
+        <div style="position: relative; width: min(340px, 80%);">
+          <div style="position: relative; width: 100%; aspect-ratio: 1400 / 1980; border-radius: 14px; overflow: hidden; background: #F4ECE6; box-shadow: 0 34px 64px -30px rgba(28,26,25,0.55);">
+            <img src="assets/book-p1.png" alt="Справочник постящейся — обложка" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .55s ease; opacity: {{ op0 }};">
+            <img src="assets/book-toc4.png" alt="Содержание книги, страница 1" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .55s ease; opacity: {{ op1 }};">
+            <img src="assets/book-toc5.png" alt="Содержание книги, страница 2" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .55s ease; opacity: {{ op2 }};">
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <button onClick="{{ prevBook }}" aria-label="Предыдущая страница" style="display: grid; place-items: center; width: 46px; height: 46px; border-radius: 999px; border: 1px solid #E4D6D1; background: #FBF6F3; color: #1C1A19; cursor: pointer; transition: background .25s, border-color .25s;" style-hover="background:#F5E1E4; border-color:#F5E1E4;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+          </button>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <sc-for list="{{ bookDots }}" as="d" hint-placeholder-count="3">
+              <button onClick="{{ d.onClick }}" aria-label="Перейти к странице" style="{{ d.style }}"></button>
+            </sc-for>
+          </div>
+          <button onClick="{{ nextBook }}" aria-label="Следующая страница" style="display: grid; place-items: center; width: 46px; height: 46px; border-radius: 999px; border: 1px solid #E4D6D1; background: #FBF6F3; color: #1C1A19; cursor: pointer; transition: background .25s, border-color .25s;" style-hover="background:#F5E1E4; border-color:#F5E1E4;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+          </button>
+        </div>
+        <span style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #B26E7A;">{{ bookCap }}</span>
+      </div>
+
+      <!-- Description + email -->
+      <div class="reveal reveal-delay-1">
+        <span style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #B26E7A;">Книга · бесплатно</span>
+        <h2 style="font-family: 'Playfair Display', serif; font-weight: 500; font-size: clamp(30px, 4.5vw, 48px); line-height: 1.06; margin: 16px 0 6px;">Справочник постящейся</h2>
+        <p style="font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(17px, 2.2vw, 22px); color: #8A817C; margin: 0 0 22px;">Мусульманка в&nbsp;Рамадан</p>
+        <p style="font-size: clamp(15px, 1.95vw, 18px); line-height: 1.65; color: #5C5653; margin: 0 0 22px; max-width: 46ch;">Я собрала в&nbsp;этой брошюре всё, что волнует мусульманку в&nbsp;пост: правила поста, хайд и&nbsp;нифас, беременность и&nbsp;кормление, поклонение и&nbsp;дети в&nbsp;Рамадан. Обновляю и&nbsp;дополняю её&nbsp;с&nbsp;2012&nbsp;года.</p>
+        <ul style="list-style: none; margin: 0 0 30px; padding: 0; display: flex; flex-wrap: wrap; gap: 10px;">
+          <li style="font-size: 13px; color: #5C5653; background: #FAEDEF; border-radius: 999px; padding: 8px 16px;">Правила поста</li>
+          <li style="font-size: 13px; color: #5C5653; background: #FAEDEF; border-radius: 999px; padding: 8px 16px;">Хайд и&nbsp;нифас</li>
+          <li style="font-size: 13px; color: #5C5653; background: #FAEDEF; border-radius: 999px; padding: 8px 16px;">Беременность и&nbsp;кормление</li>
+          <li style="font-size: 13px; color: #5C5653; background: #FAEDEF; border-radius: 999px; padding: 8px 16px;">Дети в&nbsp;Рамадан</li>
+        </ul>
+        <form onSubmit="{{ onSubmitEmail }}" style="display: flex; flex-wrap: wrap; gap: 10px; max-width: 460px;">
+          <input type="email" required="" placeholder="Ваша почта" style="flex: 1 1 200px; font-family: 'Manrope', sans-serif; font-size: 15px; padding: 15px 18px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FBF6F3; outline: none;">
+          <button type="submit" style="flex: 0 0 auto; font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 600; padding: 15px 26px; border: none; border-radius: 12px; background: #1C1A19; color: #FBF6F3; cursor: pointer; transition: background .25s;" style-hover="background:#B26E7A;">Получить книгу</button>
+        </form>
+        <p style="font-size: 13px; color: #B0A8A2; margin: 14px 0 0;">Книга придёт на&nbsp;вашу почту. Листайте обложку в карточке</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SOCIAL -->
+  <section style="background: #FBF6F3; border-top: 1px solid #ECE3DF; border-bottom: 1px solid #ECE3DF;">
+    <div style="width: min(1180px, 92vw); margin: 0 auto; padding: clamp(56px, 8vw, 100px) 0;">
+      <div class="reveal" style="text-align: center; margin-bottom: clamp(36px, 5vw, 60px);">
+        <p style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #B26E7A; margin: 0 0 14px;">Соцсети</p>
+        <h2 style="font-family: 'Playfair Display', serif; font-weight: 500; font-size: clamp(28px, 4vw, 46px); margin: 0 0 22px;">Присоединяйтесь</h2>
+        <p style="font-size: clamp(15px, 1.9vw, 17px); line-height: 1.65; color: #5C5653; max-width: 58ch; margin: 0 auto;">В&nbsp;своих блогах я поднимаю важные и&nbsp;острые темы, которые затрагивают мусульманок и&nbsp;их&nbsp;семьи. Говорю о&nbsp;воспитании детей, поклонении, семейной жизни, современных идеологиях, сектах, заблуждениях и&nbsp;других вопросах через призму Корана и&nbsp;Сунны. Подписывайся.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: clamp(20px, 3vw, 36px);">
+
+        <!-- Instagram -->
+        <a href="https://instagram.com/sestramcom" target="_blank" rel="noopener" class="reveal reveal-delay-1 card-lift" style="display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #ECE3DF; border-radius: 24px; overflow: hidden;" style-hover="border-color:#E0CBCF;">
+          <div style="position: relative; height: clamp(200px, 26vw, 280px); overflow: hidden;">
+            <img src="assets/insta-preview.jpeg" alt="Instagram @sestramcom — профиль Солихи Умм Мусы" style="width: 100%; height: 100%; object-fit: cover; object-position: center 15%;">
+            <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55) 100%);"></div>
+            <span style="position: absolute; bottom: 20px; left: 22px; font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.8vw, 26px); color: #FFFFFF; text-shadow: 0 2px 12px rgba(0,0,0,0.4);">@sestramcom</span>
+          </div>
+          <div style="padding: clamp(22px, 3vw, 32px); display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; gap: 28px;">
+              <span style="display: flex; flex-direction: column; gap: 2px;"><strong style="font-size: clamp(18px, 2.4vw, 22px); font-family: 'Playfair Display', serif;">299&nbsp;тыс.</strong><span style="font-size: 12px; color: #8A817C; letter-spacing: 0.08em;">подписчиков</span></span>
+              <span style="display: flex; flex-direction: column; gap: 2px;"><strong style="font-size: clamp(18px, 2.4vw, 22px); font-family: 'Playfair Display', serif;">2&nbsp;313</strong><span style="font-size: 12px; color: #8A817C; letter-spacing: 0.08em;">публикаций</span></span>
+            </div>
+            <span style="display: inline-flex; align-items: center; gap: 10px; font-size: 15px; color: #1C1A19; font-weight: 500;">Подписаться
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
+            </span>
+          </div>
+        </a>
+
+        <!-- Telegram -->
+        <a href="https://t.me/+5PEJxweBmGBiMTM8" target="_blank" rel="noopener" class="reveal reveal-delay-2 card-lift" style="display: flex; flex-direction: column; background: #1C1A19; border: 1px solid #2C2A28; border-radius: 24px; overflow: hidden; color: #FBF6F3;" style-hover="border-color:#444;">
+          <div style="position: relative; height: clamp(200px, 26vw, 280px); overflow: hidden;">
+            <img src="assets/tg-preview.png" alt="Telegram канал Сёстрам — 18 487 подписчиков" style="width: 100%; height: 100%; object-fit: cover; object-position: center 20%;">
+            <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(28,26,25,0.1) 30%, rgba(28,26,25,0.75) 100%);"></div>
+            <span style="position: absolute; bottom: 20px; left: 22px; font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.8vw, 26px); color: #FFFFFF;">Канал «Сёстрам»</span>
+          </div>
+          <div style="padding: clamp(22px, 3vw, 32px); display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; gap: 28px;">
+              <span style="display: flex; flex-direction: column; gap: 2px;"><strong style="font-size: clamp(18px, 2.4vw, 22px); font-family: 'Playfair Display', serif;">18&nbsp;487</strong><span style="font-size: 12px; color: #8A817C; letter-spacing: 0.08em;">подписчиков</span></span>
+            </div>
+            <span style="display: inline-flex; align-items: center; gap: 10px; font-size: 15px; color: #F5E1E4; font-weight: 500;">Перейти в&nbsp;канал
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
+            </span>
+          </div>
+        </a>
+
+        <!-- WhatsApp -->
+        <a href="https://wa.me/79164356005" target="_blank" rel="noopener" class="reveal reveal-delay-3 card-lift" style="display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #ECE3DF; border-radius: 24px; overflow: hidden;" style-hover="border-color:#BFE6C9;">
+          <div style="position: relative; height: clamp(200px, 26vw, 280px); overflow: hidden;">
+            <img src="assets/wa-preview.png" alt="WhatsApp — Солиха Умм Муса" style="width: 100%; height: 100%; object-fit: cover; object-position: center 35%;">
+            <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0) 45%, rgba(15,80,40,0.55) 100%);"></div>
+            <span style="position: absolute; bottom: 20px; left: 22px; font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.8vw, 26px); color: #FFFFFF; text-shadow: 0 2px 12px rgba(0,0,0,0.3);">WhatsApp</span>
+          </div>
+          <div style="padding: clamp(22px, 3vw, 32px); display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; gap: 28px;">
+              <span style="display: flex; flex-direction: column; gap: 2px;"><strong style="font-size: clamp(18px, 2.4vw, 22px); font-family: 'Playfair Display', serif;">+7 916 435-60-05</strong><span style="font-size: 12px; color: #8A817C; letter-spacing: 0.08em;">Солиха Умм Муса</span></span>
+            </div>
+            <p style="font-size: 15px; line-height: 1.6; color: #5C5653; margin: 0;">Здесь я веду статусы — короткие напоминания и&nbsp;живые заметки из&nbsp;повседневной жизни мусульманки.</p>
+            <span style="display: inline-flex; align-items: center; gap: 10px; font-size: 15px; color: #1C1A19; font-weight: 500;">Посмотреть статусы
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
+            </span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section id="otzyvy" style="width: min(1180px, 92vw); margin: 0 auto; padding: clamp(56px, 8vw, 110px) 0; scroll-margin-top: 90px;">
+    <div class="reveal" style="text-align: center; margin-bottom: clamp(40px, 5vw, 64px);">
+      <p style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #B26E7A; margin: 0 0 16px;">Отзывы</p>
+      <h2 style="font-family: 'Playfair Display', serif; font-weight: 500; font-size: clamp(30px, 4.5vw, 50px); margin: 0;">Что говорят сёстры</h2>
+    </div>
+    <div style="column-gap: clamp(20px, 3vw, 28px); columns: 320px; max-width: 1000px; margin: 0 auto;">
+
+      <blockquote class="reveal card-lift" style="margin: 0 0 clamp(20px, 3vw, 28px); break-inside: avoid; background: #FFFFFF; border: 1px solid #ECE3DF; border-radius: 24px; padding: clamp(26px, 3.2vw, 36px); display: inline-block; width: 100%; box-sizing: border-box;">
+        <p style="font-size: clamp(15px, 1.7vw, 17px); line-height: 1.68; color: #2E2A28; margin: 0 0 20px;">До курса я сторонилась общения — оно меня перегружало. Сейчас <mark style="background: none; color: #C0392B; font-weight: 600; text-decoration: underline; text-decoration-color: rgba(192,57,43,0.35); text-underline-offset: 3px;">я снова с&nbsp;удовольствием общаюсь, стала увереннее в&nbsp;себе, уровень тревоги сильно снизился</mark>. Иман укрепился, и&nbsp;<mark style="background: none; color: #C0392B; font-weight: 600; text-decoration: underline; text-decoration-color: rgba(192,57,43,0.35); text-underline-offset: 3px;">все сферы моей жизни однозначно улучшились</mark>.</p>
+        <footer style="font-size: 14px; color: #8A817C; font-family: 'Playfair Display', serif; font-style: italic;">— Мади</footer>
+      </blockquote>
+
+      <blockquote class="reveal card-lift" style="margin: 0 0 clamp(20px, 3vw, 28px); break-inside: avoid; background: #1C1A19; color: #ECE3DF; border: 1px solid #2C2A28; border-radius: 24px; padding: clamp(26px, 3.2vw, 36px); display: inline-block; width: 100%; box-sizing: border-box;">
+        <p style="font-size: clamp(15px, 1.7vw, 17px); line-height: 1.68; margin: 0 0 20px;">Первое, что я сделала — <mark style="background: none; color: #F0857D; font-weight: 600; text-decoration: underline; text-decoration-color: rgba(240,133,125,0.4); text-underline-offset: 3px;">приняла решение исправлять себя, а&nbsp;не обвинять других</mark>. Перестала пытаться всех исправлять и&nbsp;сосредоточилась на&nbsp;своих упущениях. <mark style="background: none; color: #F0857D; font-weight: 600; text-decoration: underline; text-decoration-color: rgba(240,133,125,0.4); text-underline-offset: 3px;">Нашла в&nbsp;себе силы помириться с&nbsp;мамой, с&nbsp;которой не разговаривала 7&nbsp;лет</mark> — и&nbsp;огромный пласт проблем отпал сам собой.</p>
+        <footer style="font-size: 14px; color: #B0A8A2; font-family: 'Playfair Display', serif; font-style: italic;">— Юлия</footer>
+      </blockquote>
+
+      <blockquote class="reveal card-lift" style="margin: 0 0 clamp(20px, 3vw, 28px); break-inside: avoid; background: #FFFFFF; border: 1px solid #ECE3DF; border-radius: 24px; padding: clamp(26px, 3.2vw, 36px); display: inline-block; width: 100%; box-sizing: border-box;">
+        <p style="font-size: clamp(15px, 1.7vw, 17px); line-height: 1.68; color: #2E2A28; margin: 0 0 20px;">Ко мне пришло <mark style="background: none; color: #C0392B; font-weight: 600; text-decoration: underline; text-decoration-color: rgba(192,57,43,0.35); text-underline-offset: 3px;">чёткое понимание акыды</mark> — теперь я могу отвечать на&nbsp;вопросы сына. Начала уделять внимание религиозному воспитанию ребёнка. <mark style="background: none; color: #C0392B; font-weight: 600; text-decoration: underline; text-decoration-color: rgba(192,57,43,0.35); text-underline-offset: 3px;">Этим курсом я в&nbsp;первую очередь начала воспитывать себя, а&nbsp;потом уже сына</mark>.</p>
+        <footer style="font-size: 14px; color: #8A817C; font-family: 'Playfair Display', serif; font-style: italic;">— Катя</footer>
+      </blockquote>
+
+      <blockquote class="reveal card-lift" style="margin: 0 0 clamp(20px, 3vw, 28px); break-inside: avoid; background: #FFFFFF; border: 1px solid #ECE3DF; border-radius: 24px; padding: clamp(26px, 3.2vw, 36px); display: inline-block; width: 100%; box-sizing: border-box;">
+        <p style="font-size: clamp(15px, 1.7vw, 17px); line-height: 1.68; color: #2E2A28; margin: 0 0 20px;">ДжазакиЛлаху Хайран, дорогая Солиха, за&nbsp;такие прекрасные уроки и&nbsp;за&nbsp;веру в&nbsp;нас. <mark style="background: none; color: #C0392B; font-weight: 600; text-decoration: underline; text-decoration-color: rgba(192,57,43,0.35); text-underline-offset: 3px;">За методы, которые нужно и&nbsp;важно внедрить</mark>, за&nbsp;пинки и&nbsp;прекрасную мотивацию обновлять своё намерение и&nbsp;стремиться к&nbsp;довольству Аллаха во&nbsp;всём.</p>
+        <footer style="font-size: 14px; color: #8A817C; font-family: 'Playfair Display', serif; font-style: italic;">— Эльвира</footer>
+      </blockquote>
+
+      <blockquote class="reveal card-lift" style="margin: 0 0 clamp(20px, 3vw, 28px); break-inside: avoid; background: #FFFFFF; border: 1px solid #ECE3DF; border-radius: 24px; padding: clamp(26px, 3.2vw, 36px); display: inline-block; width: 100%; box-sizing: border-box;">
+        <p style="font-size: clamp(15px, 1.7vw, 17px); line-height: 1.68; color: #2E2A28; margin: 0 0 20px;">Очень полезные уроки. Они короткие, но&nbsp;<mark style="background: none; color: #C0392B; font-weight: 600; text-decoration: underline; text-decoration-color: rgba(192,57,43,0.35); text-underline-offset: 3px;">очень глубокие</mark>, ма ша Аллах. Когда я слушаю вас, сестра, <mark style="background: none; color: #C0392B; font-weight: 600; text-decoration: underline; text-decoration-color: rgba(192,57,43,0.35); text-underline-offset: 3px;">честно, прям просыпаюсь, оживаю</mark> — и&nbsp;тут же приходит осознание многих вещей, альхамдулиллах.</p>
+        <footer style="font-size: 14px; color: #8A817C; font-family: 'Playfair Display', serif; font-style: italic;">— Умм Абдилля</footer>
+      </blockquote>
+
+      <blockquote class="reveal card-lift" style="margin: 0; break-inside: avoid; background: #FFFFFF; border: 1px solid #ECE3DF; border-radius: 24px; padding: clamp(26px, 3.2vw, 36px); display: inline-block; width: 100%; box-sizing: border-box;">
+        <p style="font-size: clamp(15px, 1.7vw, 17px); line-height: 1.68; color: #2E2A28; margin: 0 0 20px;">Слушаю уроки и&nbsp;<mark style="background: none; color: #C0392B; font-weight: 600; text-decoration: underline; text-decoration-color: rgba(192,57,43,0.35); text-underline-offset: 3px;">получаю много пользы</mark>, альхамдулиллах. Столько пользы в&nbsp;каждом слове. Благодарю Аллаха, что есть к&nbsp;кому обратиться из&nbsp;сестёр, кто обладает знанием и&nbsp;опытом.</p>
+        <footer style="font-size: 14px; color: #8A817C; font-family: 'Playfair Display', serif; font-style: italic;">— Сестра</footer>
+      </blockquote>
+
+    </div>
+    <div style="text-align: center; margin-top: clamp(36px, 5vw, 52px);">
+      <a href="#otzyvy" style="display: inline-flex; align-items: center; gap: 10px; font-size: 15px; border: 1px solid #1C1A19; padding: 14px 28px; border-radius: 999px;" style-hover="background:#1C1A19; color:#FBF6F3;">Все отзывы и&nbsp;оставить свой</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background: #1C1A19; color: #CDC4BE;">
+    <div style="width: min(1180px, 92vw); margin: 0 auto; padding: clamp(48px, 6vw, 80px) 0 clamp(32px, 4vw, 48px); text-align: center;">
+      <p style="font-family: 'Playfair Display', serif; font-size: clamp(28px, 5vw, 44px); color: #FBF6F3; margin: 0 0 14px;">Сёстрам</p>
+      <p style="font-size: 15px; margin: 0 0 30px;">Образовательный проект об&nbsp;Исламе для&nbsp;мусульманок · Sestram.com</p>
+      <div style="display: flex; justify-content: center; gap: 14px; margin-bottom: 36px;">
+        <a href="https://t.me/sestram" aria-label="Telegram" style="display: grid; place-items: center; width: 46px; height: 46px; border-radius: 999px; border: 1px solid #3A3633; color: #FBF6F3;" style-hover="background:#B26E7A; border-color:#B26E7A;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4 11 13"></path><path d="M22 4 15 21l-4-8-8-4 19-5Z"></path></svg>
+        </a>
+        <a href="https://instagram.com/sestramcom" aria-label="Instagram" style="display: grid; place-items: center; width: 46px; height: 46px; border-radius: 999px; border: 1px solid #3A3633; color: #FBF6F3;" style-hover="background:#B26E7A; border-color:#B26E7A;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.9" fill="currentColor" stroke="none"></circle></svg>
+        </a>
+        <a href="https://wa.me/79164356005" aria-label="WhatsApp" style="display: grid; place-items: center; width: 46px; height: 46px; border-radius: 999px; border: 1px solid #3A3633; color: #FBF6F3;" style-hover="background:#B26E7A; border-color:#B26E7A;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 1.8c2.17 0 4.21.85 5.75 2.38a8.08 8.08 0 0 1 2.38 5.74c0 4.48-3.65 8.12-8.13 8.12a8.1 8.1 0 0 1-4.13-1.13l-.3-.18-3.12.82.83-3.04-.19-.31a8.06 8.06 0 0 1-1.24-4.32c0-4.48 3.65-8.12 8.12-8.12Zm-4.6 4.4c-.22 0-.57.08-.87.41-.3.33-1.14 1.11-1.14 2.71s1.17 3.15 1.33 3.36c.16.22 2.27 3.47 5.5 4.86.77.33 1.37.53 1.84.68.77.24 1.47.21 2.03.13.62-.09 1.9-.78 2.17-1.53.27-.75.27-1.39.19-1.53-.08-.13-.3-.21-.62-.37-.33-.16-1.9-.94-2.2-1.05-.3-.11-.51-.16-.73.16-.22.33-.84 1.05-1.03 1.27-.19.22-.38.24-.7.08-.33-.16-1.37-.5-2.61-1.61-.96-.86-1.61-1.92-1.8-2.25-.19-.33-.02-.5.14-.66.15-.15.33-.38.49-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.73-1.77-1.01-2.42-.27-.64-.54-.55-.73-.56-.19-.01-.41-.01-.62-.01Z"></path></svg>
+        </a>
+      </div>
+      <p style="font-size: 13px; color: #6B645F; margin: 0;">© 2026 Сёстрам · Солиха Умм Муса</p>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { menuOpen: false, book: 0 };
+
+  BOOK = [
+    { cap: 'Обложка' },
+    { cap: 'Содержание · 1' },
+    { cap: 'Содержание · 2' },
+  ];
+  nextBook = () => this.setState(s => ({ book: ((s.book || 0) + 1) % this.BOOK.length }));
+  prevBook = () => this.setState(s => ({ book: ((s.book || 0) + this.BOOK.length - 1) % this.BOOK.length }));
+  goBook = (i) => () => this.setState({ book: i });
+
+  GUIDES = [
+    { cap: '5 причин по которым ты ничего не успеваешь' },
+    { cap: 'Как выполнять запланированное' },
+    { cap: 'Как победить прокрастинацию' },
+    { cap: 'Как вставать рано' },
+    { cap: 'Мои секреты продуктивности' },
+  ];
+  nextGuide = () => this.setState(s => ({ guide: ((s.guide || 0) + 1) % this.GUIDES.length }));
+  prevGuide = () => this.setState(s => ({ guide: ((s.guide || 0) + this.GUIDES.length - 1) % this.GUIDES.length }));
+  goGuide = (i) => () => this.setState({ guide: i });
+
+  componentDidMount() {
+    this._setupReveal();
+  }
+  componentDidUpdate() {
+    // Pick up any newly-rendered .reveal nodes
+    this._setupReveal();
+  }
+  componentWillUnmount() {
+    if (this._io) { this._io.disconnect(); this._io = null; }
+  }
+  _setupReveal = () => {
+    if (typeof window === 'undefined') return;
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+      return;
+    }
+    if (!this._io) {
+      this._io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            this._io.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: '0px 0px -10% 0px', threshold: 0.08 });
+    }
+    document.querySelectorAll('.reveal:not(.in):not([data-revealed])').forEach(el => {
+      el.setAttribute('data-revealed', '1');
+      this._io.observe(el);
+    });
+  };
+
+  toggleMenu = () => this.setState(s => ({ menuOpen: !s.menuOpen }));
+  closeMenu = () => this.setState({ menuOpen: false });
+  onSubmitEmail = (e) => {
+    e.preventDefault();
+    const input = e.target.querySelector('input');
+    alert('Спасибо! Материалы придут на ' + (input ? input.value : 'вашу почту') + ' (демо — отправка подключается позже).');
+    e.target.reset();
+  };
+
+  renderVals() {
+    const open = this.state.menuOpen;
+    const b = this.state.book || 0;
+    const g = this.state.guide || 0;
+    return {
+      toggleMenu: this.toggleMenu,
+      closeMenu: this.closeMenu,
+      onSubmitEmail: this.onSubmitEmail,
+      prevBook: this.prevBook,
+      nextBook: this.nextBook,
+      op0: b === 0 ? 1 : 0,
+      op1: b === 1 ? 1 : 0,
+      op2: b === 2 ? 1 : 0,
+      bookCap: this.BOOK[b].cap,
+      bookDots: this.BOOK.map((it, i) => ({
+        onClick: this.goBook(i),
+        style: 'width:' + (i === b ? '26px' : '9px') + '; height:9px; border-radius:999px; border:none; padding:0; cursor:pointer; transition:width .3s ease, background .3s ease; background:' + (i === b ? '#B26E7A' : '#E0CBCF') + ';',
+      })),
+      prevGuide: this.prevGuide,
+      nextGuide: this.nextGuide,
+      gop0: g === 0 ? 1 : 0,
+      gop1: g === 1 ? 1 : 0,
+      gop2: g === 2 ? 1 : 0,
+      gop3: g === 3 ? 1 : 0,
+      gop4: g === 4 ? 1 : 0,
+      guideCap: this.GUIDES[g].cap,
+      guideDots: this.GUIDES.map((it, i) => ({
+        onClick: this.goGuide(i),
+        style: 'width:' + (i === g ? '26px' : '9px') + '; height:9px; border-radius:999px; border:none; padding:0; cursor:pointer; transition:width .3s ease, background .3s ease; background:' + (i === g ? '#B26E7A' : '#E0CBCF') + ';',
+      })),
+      overlayStyle: [
+        'position:fixed', 'inset:0', 'z-index:60',
+        'background:rgba(28,26,25,0.32)',
+        'backdrop-filter:blur(4px)',
+        'transition:opacity .32s ease',
+        'opacity:' + (open ? '1' : '0'),
+        'visibility:' + (open ? 'visible' : 'hidden'),
+      ].join(';'),
+      menuPanelStyle: [
+        'position:absolute', 'top:0', 'left:0', 'bottom:0',
+        'width:min(440px,86vw)',
+        'background:#FBF6F3',
+        'padding:32px clamp(28px,5vw,52px)',
+        'box-shadow:0 0 60px rgba(28,26,25,0.25)',
+        'transition:transform .36s cubic-bezier(.4,0,.2,1)',
+        'transform:translateX(' + (open ? '0' : '-100%') + ')',
+        'overflow-y:auto',
+      ].join(';'),
+    };
+  }
+}
+</script>
+</body>
+</html>

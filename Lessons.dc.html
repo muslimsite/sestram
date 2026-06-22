@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Основы акыды — Сёстрам</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #FBF6F3;
+    color: #1C1A19;
+    font-family: 'Manrope', system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  a { text-decoration: none; color: inherit; }
+
+  .gate {
+    width: min(560px, 100%);
+    background: #FFFFFF;
+    border: 1px solid #ECE3DF;
+    border-radius: 28px;
+    padding: clamp(36px, 6vw, 64px);
+    text-align: center;
+    box-shadow: 0 40px 70px -40px rgba(28,26,25,.25);
+  }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #B26E7A;
+    margin-bottom: 22px;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    font-size: clamp(26px, 5vw, 38px);
+    line-height: 1.15;
+    margin: 0 0 18px;
+  }
+  p {
+    font-size: 15px;
+    line-height: 1.65;
+    color: #5C5653;
+    margin: 0 auto 32px;
+    max-width: 400px;
+  }
+  .question {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(20px, 3.5vw, 26px);
+    color: #1C1A19;
+    margin: 0 0 28px;
+  }
+  .actions {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 34px;
+    border-radius: 999px;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s ease, background .3s ease;
+  }
+  .btn-yes {
+    background: #1C1A19;
+    color: #FBF6F3;
+  }
+  .btn-yes:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 30px -16px rgba(28,26,25,.5);
+  }
+  .btn-no {
+    background: transparent;
+    color: #1C1A19;
+    border: 1px solid #E0CBCF;
+  }
+  .btn-no:hover {
+    background: #FAEDEF;
+  }
+  .back {
+    display: inline-block;
+    margin-top: 36px;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8A817C;
+  }
+  .back:hover { color: #B26E7A; }
+</style>
+</head>
+<body>
+  <div class="gate">
+    <div class="eyebrow">Только для женщин</div>
+    <h1>Основы акыды</h1>
+    <p>Бесплатный курс лекций по&nbsp;исламскому вероубеждению по&nbsp;книге «Три основы» — для&nbsp;сестёр и&nbsp;женщин, интересующихся Исламом.</p>
+    <div class="question">Вы&nbsp;женщина?</div>
+    <div class="actions">
+      <!-- TODO: заменить href на реальную страницу уроков, когда она будет готова -->
+      <a class="btn btn-yes" href="#">Да, перейти к&nbsp;урокам</a>
+      <a class="btn btn-no" href="index.html">Нет</a>
+    </div>
+    <a class="back" href="index.html">← На главную</a>
+  </div>
+</body>
+</html>
