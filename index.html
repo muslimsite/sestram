@@ -311,11 +311,27 @@
           <li style="font-size: 13px; color: #5C5653; background: #FAEDEF; border-radius: 999px; padding: 8px 16px;">Вставать рано</li>
           <li style="font-size: 13px; color: #5C5653; background: #FAEDEF; border-radius: 999px; padding: 8px 16px;">Секреты продуктивности</li>
         </ul>
-        <form onSubmit="{{ onSubmitEmail }}" style="display: flex; flex-wrap: wrap; gap: 10px; max-width: 460px;">
-          <input type="email" required="" placeholder="Ваша почта" style="flex: 1 1 200px; font-family: 'Manrope', sans-serif; font-size: 15px; padding: 15px 18px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; outline: none;">
-          <button type="submit" style="flex: 0 0 auto; font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 600; padding: 15px 26px; border: none; border-radius: 12px; background: #1C1A19; color: #FBF6F3; cursor: pointer; transition: background .25s;" style-hover="background:#B26E7A;">Получить гайды</button>
-        </form>
-        <p style="font-size: 13px; color: #B0A8A2; margin: 14px 0 0;">Все 5 гайдов придут на&nbsp;вашу почту. Листайте превью в карточке</p>
+        <div style="{{ guidesFormStyle }}">
+          <form onSubmit="{{ onSubmitGuides }}" style="display: flex; flex-direction: column; gap: 10px; max-width: 460px;">
+            <input name="name" type="text" required="" placeholder="Ваше имя" style="font-family: 'Manrope', sans-serif; font-size: 15px; padding: 15px 18px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; outline: none;">
+            <input name="email" type="email" required="" placeholder="Ваша почта" style="font-family: 'Manrope', sans-serif; font-size: 15px; padding: 15px 18px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; outline: none;">
+            <input name="phone" type="tel" required="" placeholder="Телефон" style="font-family: 'Manrope', sans-serif; font-size: 15px; padding: 15px 18px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; outline: none;">
+            <input name="tg" type="text" placeholder="Ник в Telegram (необязательно)" style="font-family: 'Manrope', sans-serif; font-size: 15px; padding: 15px 18px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; outline: none;">
+            <button type="submit" style="font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 600; padding: 15px 26px; border: none; border-radius: 12px; background: #1C1A19; color: #FBF6F3; cursor: pointer; transition: background .25s;" style-hover="background:#B26E7A;">Получить гайды</button>
+          </form>
+          <p style="font-size: 13px; color: #B0A8A2; margin: 14px 0 0;">Заполните данные — и сразу откроется доступ ко всем&nbsp;5&nbsp;гайдам. Листайте превью в карточке</p>
+        </div>
+        <div style="{{ guidesDoneStyle }}">
+          <p style="font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.6vw, 24px); margin: 0 0 18px;">ДжазакиЛлаху хайран! Скачивайте гайды:</p>
+          <div style="display: flex; flex-direction: column; gap: 10px; max-width: 460px;">
+            <sc-for list="{{ guideFiles }}" as="f" hint-placeholder-count="5">
+              <a href="{{ f.href }}" download="" target="_blank" rel="noopener" class="arrow-nudge" style="{{ f.style }}" style-hover="border-color:#B26E7A; background:#FAEDEF;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B26E7A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M7 10l5 5 5-5"></path><path d="M12 15V3"></path></svg>
+                {{ f.label }}
+              </a>
+            </sc-for>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -362,11 +378,25 @@
           <li style="font-size: 13px; color: #5C5653; background: #FAEDEF; border-radius: 999px; padding: 8px 16px;">Беременность и&nbsp;кормление</li>
           <li style="font-size: 13px; color: #5C5653; background: #FAEDEF; border-radius: 999px; padding: 8px 16px;">Дети в&nbsp;Рамадан</li>
         </ul>
-        <form onSubmit="{{ onSubmitEmail }}" style="display: flex; flex-wrap: wrap; gap: 10px; max-width: 460px;">
-          <input type="email" required="" placeholder="Ваша почта" style="flex: 1 1 200px; font-family: 'Manrope', sans-serif; font-size: 15px; padding: 15px 18px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FBF6F3; outline: none;">
-          <button type="submit" style="flex: 0 0 auto; font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 600; padding: 15px 26px; border: none; border-radius: 12px; background: #1C1A19; color: #FBF6F3; cursor: pointer; transition: background .25s;" style-hover="background:#B26E7A;">Получить книгу</button>
-        </form>
-        <p style="font-size: 13px; color: #B0A8A2; margin: 14px 0 0;">Книга придёт на&nbsp;вашу почту. Листайте обложку в карточке</p>
+        <div style="{{ bookFormStyle }}">
+          <form onSubmit="{{ onSubmitBook }}" style="display: flex; flex-direction: column; gap: 10px; max-width: 460px;">
+            <input name="name" type="text" required="" placeholder="Ваше имя" style="font-family: 'Manrope', sans-serif; font-size: 15px; padding: 15px 18px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FBF6F3; outline: none;">
+            <input name="email" type="email" required="" placeholder="Ваша почта" style="font-family: 'Manrope', sans-serif; font-size: 15px; padding: 15px 18px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FBF6F3; outline: none;">
+            <input name="phone" type="tel" required="" placeholder="Телефон" style="font-family: 'Manrope', sans-serif; font-size: 15px; padding: 15px 18px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FBF6F3; outline: none;">
+            <input name="tg" type="text" placeholder="Ник в Telegram (необязательно)" style="font-family: 'Manrope', sans-serif; font-size: 15px; padding: 15px 18px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FBF6F3; outline: none;">
+            <button type="submit" style="font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 600; padding: 15px 26px; border: none; border-radius: 12px; background: #1C1A19; color: #FBF6F3; cursor: pointer; transition: background .25s;" style-hover="background:#B26E7A;">Получить книгу</button>
+          </form>
+          <p style="font-size: 13px; color: #B0A8A2; margin: 14px 0 0;">Заполните данные — и сразу откроется доступ к&nbsp;книге. Листайте обложку в карточке</p>
+        </div>
+        <div style="{{ bookDoneStyle }}">
+          <p style="font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.6vw, 24px); margin: 0 0 18px;">ДжазакиЛлаху хайран! Скачивайте книгу:</p>
+          <div style="display: flex; flex-direction: column; gap: 10px; max-width: 460px;">
+            <a href="{{ bookFileHref }}" download="" target="_blank" rel="noopener" class="arrow-nudge" style="{{ bookFileStyle }}" style-hover="border-color:#B26E7A; background:#FAEDEF;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B26E7A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M7 10l5 5 5-5"></path><path d="M12 15V3"></path></svg>
+              {{ bookFileLabel }}
+            </a>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -536,11 +566,21 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { menuOpen: false, book: 0, reviewOpen: false, reviewSending: false, reviewDone: false };
+  state = { menuOpen: false, book: 0, reviewOpen: false, reviewSending: false, reviewDone: false, guidesSent: false, bookSent: false };
 
-  // URL Cloudflare Worker, который пересылает отзыв в Telegram-группу.
+  // URL Cloudflare Worker: принимает отзывы и заявки на материалы, пересылает в Telegram.
   // Замените на свой адрес после деплоя (см. cloudflare-worker/README.md).
-  REVIEW_ENDPOINT = 'https://sestram-reviews.dvaarbyza.workers.dev';
+  WORKER_ENDPOINT = 'https://sestram-reviews.dvaarbyza.workers.dev';
+
+  // Файлы для скачивания (лежат в папке downloads/ в этом же репозитории).
+  GUIDE_FILES = [
+    { label: '5 причин, по которым ты ничего не успеваешь', href: 'downloads/guide-1.pdf' },
+    { label: 'Как выполнять запланированное', href: 'downloads/guide-2.pdf' },
+    { label: 'Как победить прокрастинацию', href: 'downloads/guide-3.pdf' },
+    { label: 'Как вставать рано', href: 'downloads/guide-4.pdf' },
+    { label: 'Мои секреты продуктивности', href: 'downloads/guide-5.pdf' },
+  ];
+  BOOK_FILE = { label: 'Справочник постящейся (PDF)', href: 'downloads/spravochnik-postyascheysya.pdf' };
 
   BOOK = [
     { cap: 'Обложка' },
@@ -596,11 +636,22 @@ class Component extends DCLogic {
 
   toggleMenu = () => this.setState(s => ({ menuOpen: !s.menuOpen }));
   closeMenu = () => this.setState({ menuOpen: false });
-  onSubmitEmail = (e) => {
+
+  // Сбор контактов + мгновенная выдача файлов. Данные уходят в Telegram (best-effort),
+  // а ссылки на скачивание открываются на сайте в любом случае.
+  onSubmitLead = (magnet) => (e) => {
     e.preventDefault();
-    const input = e.target.querySelector('input');
-    alert('Спасибо! Материалы придут на ' + (input ? input.value : 'вашу почту') + ' (демо — отправка подключается позже).');
-    e.target.reset();
+    const form = e.target;
+    const get = (n) => { const el = form.querySelector('[name=' + n + ']'); return el ? String(el.value || '').trim() : ''; };
+    const lead = { name: get('name'), email: get('email'), phone: get('phone'), tg: get('tg') };
+    if (this.WORKER_ENDPOINT.indexOf('ЗАПОЛНИТЬ') === -1) {
+      fetch(this.WORKER_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.assign({ type: 'lead', magnet }, lead)),
+      }).catch(() => {});
+    }
+    this.setState(magnet === 'guides' ? { guidesSent: true } : { bookSent: true });
   };
 
   stopProp = (e) => { if (e && e.stopPropagation) e.stopPropagation(); };
@@ -612,14 +663,14 @@ class Component extends DCLogic {
     const name = (form.querySelector('[name=name]') || {}).value || '';
     const text = ((form.querySelector('[name=text]') || {}).value || '').trim();
     if (!text) return;
-    if (this.REVIEW_ENDPOINT.indexOf('ЗАПОЛНИТЬ') !== -1) {
+    if (this.WORKER_ENDPOINT.indexOf('ЗАПОЛНИТЬ') !== -1) {
       alert('Форма отзывов ещё подключается — попробуйте чуть позже.');
       return;
     }
     if (this.state.reviewSending) return;
     this.setState({ reviewSending: true });
     try {
-      const res = await fetch(this.REVIEW_ENDPOINT, {
+      const res = await fetch(this.WORKER_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: name.trim(), text }),
@@ -639,10 +690,27 @@ class Component extends DCLogic {
     const g = this.state.guide || 0;
     const rOpen = this.state.reviewOpen;
     const rDone = this.state.reviewDone;
+    const guidesSent = this.state.guidesSent;
+    const bookSent = this.state.bookSent;
+    const dlLinkStyle = [
+      'display:flex', 'align-items:center', 'gap:10px',
+      'font-family:\'Manrope\',sans-serif', 'font-size:15px', 'font-weight:600',
+      'padding:14px 20px', 'border:1px solid #E4D6D1', 'border-radius:12px',
+      'background:#FFFFFF', 'color:#1C1A19',
+    ].join(';') + ';';
     return {
       toggleMenu: this.toggleMenu,
       closeMenu: this.closeMenu,
-      onSubmitEmail: this.onSubmitEmail,
+      onSubmitGuides: this.onSubmitLead('guides'),
+      onSubmitBook: this.onSubmitLead('book'),
+      guidesFormStyle: 'display:' + (guidesSent ? 'none' : 'block') + ';',
+      guidesDoneStyle: 'display:' + (guidesSent ? 'block' : 'none') + ';',
+      bookFormStyle: 'display:' + (bookSent ? 'none' : 'block') + ';',
+      bookDoneStyle: 'display:' + (bookSent ? 'block' : 'none') + ';',
+      bookFileHref: this.BOOK_FILE.href,
+      bookFileLabel: this.BOOK_FILE.label,
+      bookFileStyle: dlLinkStyle,
+      guideFiles: this.GUIDE_FILES.map((f) => ({ href: f.href, label: f.label, style: dlLinkStyle })),
       openReview: this.openReview,
       closeReview: this.closeReview,
       stopProp: this.stopProp,

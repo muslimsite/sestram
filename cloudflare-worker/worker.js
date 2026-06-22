@@ -1,7 +1,9 @@
 /**
  * Cloudflare Worker — приём отзывов с сайта и пересылка в Telegram-группу.
  *
- * Сайт (index.html) отправляет POST с JSON { name, text } на адрес этого Worker.
+ * Сайт (index.html) отправляет на адрес этого Worker POST с JSON:
+ *   - отзыв:           { name, text }
+ *   - заявка на файлы: { type: 'lead', email, magnet: 'guides' | 'book' }
  * Worker добавляет токен бота (он хранится скрытно в переменных Worker, в коде его нет)
  * и пересылает сообщение в группу через Telegram Bot API.
  *
@@ -34,21 +36,44 @@ export default {
       return json({ error: 'Invalid JSON' }, 400, allowOrigin);
     }
 
-    const name = String(data.name || '').trim().slice(0, 100);
-    const text = String(data.text || '').trim().slice(0, 2000);
-
-    if (!text) {
-      return json({ error: 'Empty review' }, 400, allowOrigin);
-    }
-
     if (!env.BOT_TOKEN || !env.CHAT_ID) {
       return json({ error: 'Worker is not configured' }, 500, allowOrigin);
     }
 
-    const message =
-      '🌸 Новый отзыв с сайта\n\n' +
-      'Имя: ' + (name || 'аноним') + '\n\n' +
-      text;
+    let message;
+
+    if (data.type === 'lead') {
+      // Заявка на бесплатные материалы (сбор контактов с форм «получить гайды/книгу»).
+      const name = String(data.name || '').trim().slice(0, 100);
+      const email = String(data.email || '').trim().slice(0, 150);
+      const phone = String(data.phone || '').trim().slice(0, 40);
+      const tg = String(data.tg || '').trim().slice(0, 60);
+      const magnet = String(data.magnet || '').trim().slice(0, 60);
+      if (!email && !phone) {
+        return json({ error: 'No contact provided' }, 400, allowOrigin);
+      }
+      const what = magnet === 'guides' ? 'Гайды по планированию'
+        : magnet === 'book' ? 'Справочник постящейся'
+        : (magnet || 'материалы');
+      message =
+        '📩 Новая заявка на материалы\n\n' +
+        'Что: ' + what + '\n' +
+        'Имя: ' + (name || '—') + '\n' +
+        'Почта: ' + (email || '—') + '\n' +
+        'Телефон: ' + (phone || '—') + '\n' +
+        'Telegram: ' + (tg || '—');
+    } else {
+      // Отзыв с сайта.
+      const name = String(data.name || '').trim().slice(0, 100);
+      const text = String(data.text || '').trim().slice(0, 2000);
+      if (!text) {
+        return json({ error: 'Empty review' }, 400, allowOrigin);
+      }
+      message =
+        '🌸 Новый отзыв с сайта\n\n' +
+        'Имя: ' + (name || 'аноним') + '\n\n' +
+        text;
+    }
 
     const tgUrl = 'https://api.telegram.org/bot' + env.BOT_TOKEN + '/sendMessage';
     let tgRes;
