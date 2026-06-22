@@ -96,6 +96,6 @@ function doPost(e) {
 // Чтобы открытие URL в браузере не выдавало ошибку.
 function doGet() {
   return ContentService
-    .createTextOutput(JSON.stringify({ ok: true, info: 'Sestram leads endpoint' }))
+    .createTextOutput(JSON.stringify({ ok: true, info: 'Sestram leads endpoint', version: 'v2-dedup' }))
     .setMimeType(ContentService.MimeType.JSON);
 }
