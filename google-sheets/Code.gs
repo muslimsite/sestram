@@ -15,14 +15,25 @@
 // Имя листа, куда писать заявки (если нет — берётся первый лист).
 var SHEET_NAME = 'Заявки';
 
+// ID вашей Google-таблицы (из ссылки .../spreadsheets/d/ЭТОТ_ID/edit).
+// Благодаря ему скрипт пишет в нужную таблицу, даже если создан отдельно от неё.
+var SHEET_ID = '118uNb4a4SLIwU92P3o0ROB0nLqvDTguK6C2PfZy3SCg';
+
 // Колонки: 1=Дата 2=Материал 3=Имя 4=Почта 5=Телефон 6=Telegram
 var COL = { date: 1, magnet: 2, name: 3, email: 4, phone: 5, tg: 6 };
+
+function getSpreadsheet_() {
+  if (SHEET_ID && SHEET_ID.indexOf('ВСТАВИТЬ') === -1) {
+    return SpreadsheetApp.openById(SHEET_ID);
+  }
+  return SpreadsheetApp.getActiveSpreadsheet();
+}
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
   lock.tryLock(20000);
   try {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var ss = getSpreadsheet_();
     var sheet = ss.getSheetByName(SHEET_NAME) || ss.getSheets()[0];
 
     // Заголовки при первом запуске
