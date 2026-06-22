@@ -571,20 +571,10 @@ class Component extends DCLogic {
   // URL Cloudflare Worker: принимает отзывы и пересылает их в Telegram.
   WORKER_ENDPOINT = 'https://sestram-reviews.dvaarbyza.workers.dev';
 
-  // Google Форма для сбора заявок на материалы (имя, почта, телефон, ник в TG).
-  // Ответы автоматически собираются в Google-таблицу.
-  // Подставьте свои значения после создания формы (см. downloads/README.md).
-  // Пока в action стоит FORM_ID — отправка просто пропускается, файлы всё равно выдаются.
-  GOOGLE_FORM = {
-    action: 'https://docs.google.com/forms/d/e/FORM_ID/formResponse',
-    fields: {
-      name:   'entry.NAME',
-      email:  'entry.EMAIL',
-      phone:  'entry.PHONE',
-      tg:     'entry.TG',
-      magnet: 'entry.MAGNET',
-    },
-  };
+  // Google Apps Script Web App — пишет заявки напрямую в Google-таблицу
+  // (имя, почта, телефон, ник в TG + материал). См. google-sheets/README.md.
+  // Пока стоит ВСТАВИТЬ_URL — отправка пропускается, файлы всё равно выдаются.
+  SHEET_ENDPOINT = 'ВСТАВИТЬ_URL_WEB_APP';
 
   // Файлы для скачивания (лежат в папке downloads/ в этом же репозитории).
   GUIDE_FILES = [
@@ -651,31 +641,20 @@ class Component extends DCLogic {
   toggleMenu = () => this.setState(s => ({ menuOpen: !s.menuOpen }));
   closeMenu = () => this.setState({ menuOpen: false });
 
-  // Сбор контактов в Google Форму + мгновенная выдача файлов.
-  // Данные уходят в Google Форму (best-effort), а ссылки на скачивание
+  // Сбор контактов в Google-таблицу + мгновенная выдача файлов.
+  // Данные уходят в Apps Script Web App (best-effort), а ссылки на скачивание
   // открываются на сайте в любом случае.
   onSubmitLead = (magnet) => (e) => {
     e.preventDefault();
     const form = e.target;
     const get = (n) => { const el = form.querySelector('[name=' + n + ']'); return el ? String(el.value || '').trim() : ''; };
     const lead = { name: get('name'), email: get('email'), phone: get('phone'), tg: get('tg') };
-    const gf = this.GOOGLE_FORM;
-    if (gf.action.indexOf('FORM_ID') === -1) {
+    if (this.SHEET_ENDPOINT.indexOf('ВСТАВИТЬ') === -1) {
       const magnetLabel = magnet === 'guides' ? 'Гайды по планированию' : 'Справочник постящейся';
-      const values = { name: lead.name, email: lead.email, phone: lead.phone, tg: lead.tg, magnet: magnetLabel };
-      const body = new URLSearchParams();
-      Object.keys(gf.fields).forEach((k) => {
-        const entry = gf.fields[k];
-        if (entry && entry.indexOf('entry.') === 0 && !/entry\.[A-Z]+$/.test(entry)) {
-          body.append(entry, values[k] || '');
-        }
+      const body = new URLSearchParams({
+        name: lead.name, email: lead.email, phone: lead.phone, tg: lead.tg, magnet: magnetLabel,
       });
-      fetch(gf.action, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-        body: body.toString(),
-      }).catch(() => {});
+      fetch(this.SHEET_ENDPOINT, { method: 'POST', mode: 'no-cors', body: body }).catch(() => {});
     }
     this.setState(magnet === 'guides' ? { guidesSent: true } : { bookSent: true });
   };
