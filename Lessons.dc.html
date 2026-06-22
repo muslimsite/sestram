@@ -71,8 +71,10 @@
     justify-content: center;
     padding: 14px 34px;
     border-radius: 999px;
+    font-family: inherit;
     font-size: 14px;
     letter-spacing: 0.04em;
+    border: none;
     cursor: pointer;
     transition: transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s ease, background .3s ease;
   }
@@ -101,6 +103,66 @@
     color: #8A817C;
   }
   .back:hover { color: #B26E7A; }
+
+  /* Всплывающее предупреждение */
+  .warn-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(28,26,25,0.45);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .3s ease, visibility .3s ease;
+  }
+  .warn-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+  .warn-card {
+    width: min(440px, 100%);
+    background: #FFFFFF;
+    border: 1px solid #ECE3DF;
+    border-radius: 24px;
+    padding: clamp(30px, 6vw, 44px);
+    text-align: center;
+    box-shadow: 0 40px 70px -30px rgba(28,26,25,.45);
+    transform: translateY(24px) scale(.96);
+    transition: transform .34s cubic-bezier(.22,.61,.36,1);
+  }
+  .warn-overlay.open .warn-card {
+    transform: none;
+  }
+  .warn-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 20px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: #FAEDEF;
+    color: #B26E7A;
+    font-size: 28px;
+    line-height: 1;
+  }
+  .warn-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    font-size: clamp(22px, 4vw, 28px);
+    margin: 0 0 14px;
+    color: #1C1A19;
+  }
+  .warn-card p {
+    margin: 0 auto 28px;
+    max-width: 320px;
+  }
+  .warn-card .btn-yes {
+    width: 100%;
+  }
 </style>
 </head>
 <body>
@@ -110,11 +172,28 @@
     <p>Бесплатный курс лекций по&nbsp;исламскому вероубеждению по&nbsp;книге «Три основы» — для&nbsp;сестёр и&nbsp;женщин, интересующихся Исламом.</p>
     <div class="question">Вы&nbsp;женщина?</div>
     <div class="actions">
-      <!-- TODO: заменить href на реальную страницу уроков, когда она будет готова -->
-      <a class="btn btn-yes" href="#">Да, перейти к&nbsp;урокам</a>
-      <a class="btn btn-no" href="index.html">Нет</a>
+      <a class="btn btn-yes" href="https://t.me/+K3CcnPzdJhFmMzI8" target="_blank" rel="noopener">Да, перейти к&nbsp;урокам</a>
+      <button class="btn btn-no" type="button" onclick="openWarn()">Нет</button>
     </div>
     <a class="back" href="index.html">← На главную</a>
   </div>
+
+  <!-- Предупреждение для мужчин -->
+  <div class="warn-overlay" id="warn" onclick="if(event.target===this)closeWarn()">
+    <div class="warn-card" role="alertdialog" aria-modal="true" aria-labelledby="warn-title">
+      <div class="warn-icon">⚠</div>
+      <h2 id="warn-title">Внимание</h2>
+      <p>Этот курс предназначен только&nbsp;для&nbsp;женщин. Если&nbsp;вы&nbsp;мужчина, пожалуйста, покиньте эту&nbsp;страницу.</p>
+      <a class="btn btn-yes" href="index.html">Покинуть страницу</a>
+    </div>
+  </div>
+
+  <script>
+    function openWarn() { document.getElementById('warn').classList.add('open'); }
+    function closeWarn() { document.getElementById('warn').classList.remove('open'); }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeWarn();
+    });
+  </script>
 </body>
 </html>
