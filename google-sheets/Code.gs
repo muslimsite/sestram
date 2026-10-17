@@ -33,6 +33,13 @@ var HEADERS = ['Дата', 'Материал', 'Имя', 'Почта', 'Теле
 // Имя отправителя, которое увидит получатель.
 var MAIL_FROM_NAME = 'Солиха умм Муса';
 
+// Почта, с которой должны приходить письма.
+// Чтобы письма УХОДИЛИ с неё, она должна быть псевдонимом аккаунта, которому
+// принадлежит скрипт (Gmail → Настройки → Аккаунты и импорт → «Отправлять письма как»).
+// Если это не так, письмо уйдёт с основной почты аккаунта, но ОТВЕТЫ всё равно
+// придут на адрес ниже.
+var MAIL_FROM = 'umm.ronny123@gmail.com';
+
 // Адрес сайта (для ссылок на гайды).
 var SITE_URL = 'https://urokisestram.com';
 
@@ -145,17 +152,38 @@ function sendMagnetEmail_(email, name, magnet) {
 
   try {
     if (MailApp.getRemainingDailyQuota() <= 0) return 'лимит писем на сегодня';
-    MailApp.sendEmail({
+
+    var options = {
       to: email,
       subject: subject,
       name: MAIL_FROM_NAME,
+      replyTo: MAIL_FROM,
       htmlBody: buildMagnetHtml_(name, isBook, files),
       body: buildMagnetText_(name, isBook, files),
-    });
-    return 'отправлено';
+    };
+
+    // Отправляем с MAIL_FROM, если это подтверждённый псевдоним аккаунта.
+    var alias = hasAlias_(MAIL_FROM);
+    if (alias) options.from = MAIL_FROM;
+
+    MailApp.sendEmail(options);
+    return alias ? 'отправлено' : 'отправлено (с основной почты)';
   } catch (err) {
     return 'ошибка: ' + String(err);
   }
+}
+
+/** Проверяет, что адрес подключён в Gmail как «Отправлять письма как». */
+function hasAlias_(address) {
+  try {
+    var aliases = GmailApp.getAliases() || [];
+    for (var i = 0; i < aliases.length; i++) {
+      if (String(aliases[i]).toLowerCase() === String(address).toLowerCase()) return true;
+    }
+  } catch (err) {
+    // Нет доступа к Gmail — отправим с основной почты аккаунта.
+  }
+  return false;
 }
 
 /** Обращение по имени, если имя есть. */
@@ -182,6 +210,7 @@ function buildMagnetText_(name, isBook, files) {
   lines.push('Баракаллаху фикум,');
   lines.push(MAIL_FROM_NAME);
   lines.push(SITE_URL);
+  lines.push(MAIL_FROM);
   return lines.join('\n');
 }
 
@@ -211,7 +240,8 @@ function buildMagnetHtml_(name, isBook, files) {
           '<p style="margin:22px 0 0;font-size:14px;line-height:1.65;color:#5C5653;">Ссылки не истекают — можно вернуться к ним в любое время. Если что-то не открылось, просто ответьте на это письмо.</p>' +
           '<p style="margin:26px 0 0;font-size:14px;line-height:1.7;color:#5C5653;">Баракаллаху фикум,<br>' +
             '<span style="color:#1C1A19;">' + escapeHtml_(MAIL_FROM_NAME) + '</span><br>' +
-            '<a href="' + SITE_URL + '" style="color:#B26E7A;text-decoration:none;">' + SITE_URL.replace('https://', '') + '</a>' +
+            '<a href="' + SITE_URL + '" style="color:#B26E7A;text-decoration:none;">' + SITE_URL.replace('https://', '') + '</a><br>' +
+            '<a href="mailto:' + MAIL_FROM + '" style="color:#B26E7A;text-decoration:none;">' + escapeHtml_(MAIL_FROM) + '</a>' +
           '</p>' +
         '</td></tr>' +
       '</table>' +
