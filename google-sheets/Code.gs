@@ -4,9 +4,9 @@
  * Сайт (index.html) отправляет POST с полями: name, email, phone, tg, magnet.
  * Скрипт дописывает их новой строкой в таблицу. Никакой Google Формы не нужно.
  *
- * Дополнительно скрипт ОТПРАВЛЯЕТ ЧЕЛОВЕКУ ПИСЬМО со ссылками на материалы
- * (с почты владельца скрипта). Если отправить не удалось, заявка всё равно
- * записывается в таблицу, а в колонку «Письмо» попадает причина отказа.
+ * Дополнительно скрипт ОТПРАВЛЯЕТ ЧЕЛОВЕКУ ПИСЬМО со ссылками на материалы —
+ * через Resend, с адреса info@urokisestram.com. Если отправить не удалось,
+ * заявка всё равно записывается в таблицу, а в колонку «Письмо» попадает причина.
  *
  * Защита от дублей: если в таблице уже есть строка с такой же ПОЧТОЙ
  * (а если почты нет — с таким же ТЕЛЕФОНОМ), новая строка не создаётся.
@@ -30,15 +30,15 @@ var HEADERS = ['Дата', 'Материал', 'Имя', 'Почта', 'Теле
 
 // ───────── Письмо с материалами ─────────
 
-// Имя отправителя, которое увидит получатель.
-var MAIL_FROM_NAME = 'Солиха умм Муса';
+// Имя и адрес отправителя, которые увидит получатель.
+var MAIL_FROM_NAME = 'Уроки Сёстрам';
+var MAIL_FROM = 'info@urokisestram.com';
 
-// Почта, с которой должны приходить письма.
-// Чтобы письма УХОДИЛИ с неё, она должна быть псевдонимом аккаунта, которому
-// принадлежит скрипт (Gmail → Настройки → Аккаунты и импорт → «Отправлять письма как»).
-// Если это не так, письмо уйдёт с основной почты аккаунта, но ОТВЕТЫ всё равно
-// придут на адрес ниже.
-var MAIL_FROM = 'umm.ronny123@gmail.com';
+// Письма уходят через Resend (resend.com) — так адрес отправителя принадлежит
+// домену, а личная почта владельца нигде не показывается.
+// Ключ хранится в настройках скрипта, НЕ в коде:
+// Apps Script → ⚙️ Настройки проекта → Свойства скрипта → RESEND_API_KEY.
+var RESEND_ENDPOINT = 'https://api.resend.com/emails';
 
 // Адрес сайта (для ссылок на гайды).
 var SITE_URL = 'https://urokisestram.com';
@@ -150,40 +150,32 @@ function sendMagnetEmail_(email, name, magnet) {
   var files = isBook ? [BOOK_FILE] : GUIDE_FILES;
   var subject = isBook ? 'Справочник постящейся' : 'Ваши гайды по планированию';
 
-  try {
-    if (MailApp.getRemainingDailyQuota() <= 0) return 'лимит писем на сегодня';
+  var key = PropertiesService.getScriptProperties().getProperty('RESEND_API_KEY');
+  if (!key) return 'нет ключа RESEND_API_KEY';
 
-    var options = {
-      to: email,
+  try {
+    var payload = {
+      from: MAIL_FROM_NAME + ' <' + MAIL_FROM + '>',
+      to: [email],
       subject: subject,
-      name: MAIL_FROM_NAME,
-      replyTo: MAIL_FROM,
-      htmlBody: buildMagnetHtml_(name, isBook, files),
-      body: buildMagnetText_(name, isBook, files),
+      html: buildMagnetHtml_(name, isBook, files),
+      text: buildMagnetText_(name, isBook, files),
     };
 
-    // Отправляем с MAIL_FROM, если это подтверждённый псевдоним аккаунта.
-    var alias = hasAlias_(MAIL_FROM);
-    if (alias) options.from = MAIL_FROM;
+    var res = UrlFetchApp.fetch(RESEND_ENDPOINT, {
+      method: 'post',
+      contentType: 'application/json',
+      headers: { Authorization: 'Bearer ' + key },
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true,
+    });
 
-    MailApp.sendEmail(options);
-    return alias ? 'отправлено' : 'отправлено (с основной почты)';
+    var code = res.getResponseCode();
+    if (code >= 200 && code < 300) return 'отправлено';
+    return 'ошибка ' + code + ': ' + String(res.getContentText()).slice(0, 200);
   } catch (err) {
     return 'ошибка: ' + String(err);
   }
-}
-
-/** Проверяет, что адрес подключён в Gmail как «Отправлять письма как». */
-function hasAlias_(address) {
-  try {
-    var aliases = GmailApp.getAliases() || [];
-    for (var i = 0; i < aliases.length; i++) {
-      if (String(aliases[i]).toLowerCase() === String(address).toLowerCase()) return true;
-    }
-  } catch (err) {
-    // Нет доступа к Gmail — отправим с основной почты аккаунта.
-  }
-  return false;
 }
 
 /** Обращение по имени, если имя есть. */
@@ -210,7 +202,6 @@ function buildMagnetText_(name, isBook, files) {
   lines.push('Баракаллаху фикум,');
   lines.push(MAIL_FROM_NAME);
   lines.push(SITE_URL);
-  lines.push(MAIL_FROM);
   return lines.join('\n');
 }
 
