@@ -337,9 +337,38 @@
           </form>
           <p style="font-size: 13px; color: #B0A8A2; margin: 14px 0 0;">Укажите имя и&nbsp;почту — отправим все&nbsp;5&nbsp;гайдов письмом.</p>
         </div>
+        <div style="{{ guidesSendingStyle }}">
+          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Отправляем письмо…</p>
+        </div>
         <div style="{{ guidesDoneStyle }}">
           <p style="font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.6vw, 24px); margin: 0 0 14px;">ДжазакиЛлаху хайран!</p>
-          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Письмо с&nbsp;гайдами уже летит на&nbsp;указанную почту. Если его нет во&nbsp;«Входящих» через пару минут, загляните в&nbsp;папку «Спам» или «Промоакции».</p>
+          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Письмо с гайдами отправлено на&nbsp;указанную почту. Если его нет во&nbsp;«Входящих» через пару минут, загляните в&nbsp;папку «Спам» или «Промоакции».</p>
+          <div style="{{ guidesResendStyle }}">
+            <button onClick="{{ onResendGuides }}" style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; padding: 13px 22px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; color: #1C1A19; cursor: pointer; margin-top: 18px;">Письмо не пришло? Отправить ещё раз</button>
+          </div>
+          <div style="{{ guidesResentStyle }}">
+            <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch; margin-top: 14px;">Отправили ещё раз. Если и&nbsp;это письмо не&nbsp;дойдёт, скачайте материалы прямо здесь:</p>
+          </div>
+        </div>
+        <div style="{{ guidesFailedStyle }}">
+          <p style="font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.6vw, 24px); margin: 0 0 14px;">Не получилось отправить письмо</p>
+          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Проверьте, верно&nbsp;ли указана почта, и&nbsp;попробуйте ещё раз.</p>
+          <button onClick="{{ onResendGuides }}" style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; padding: 13px 22px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; color: #1C1A19; cursor: pointer; margin-top: 18px;">Попробовать ещё раз</button>
+        </div>
+        <div style="{{ guidesFallbackStyle }}">
+          <div style="{{ guidesFallbackNoteStyle }}">
+            <p style="font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.6vw, 24px); margin: 0 0 14px;">Письмо отправить не&nbsp;удалось</p>
+            <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Но&nbsp;это не&nbsp;беда — скачайте гайды прямо здесь:</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px; max-width: 460px; margin-top: 16px;">
+            <sc-for list="{{ guideFiles }}" as="f" hint-placeholder-count="5">
+              <a href="{{ f.href }}" download="" target="_blank" rel="noopener" class="arrow-nudge" style="{{ f.style }}" style-hover="border-color:#B26E7A; background:#FAEDEF;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B26E7A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+                {{ f.label }}
+              </a>
+            </sc-for>
+          </div>
+        </div>
         </div>
       </div>
 
@@ -395,9 +424,36 @@
           </form>
           <p style="font-size: 13px; color: #B0A8A2; margin: 14px 0 0;">Укажите имя и&nbsp;почту — отправим книгу письмом.</p>
         </div>
+        <div style="{{ bookSendingStyle }}">
+          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Отправляем письмо…</p>
+        </div>
         <div style="{{ bookDoneStyle }}">
           <p style="font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.6vw, 24px); margin: 0 0 14px;">ДжазакиЛлаху хайран!</p>
-          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Письмо с&nbsp;книгой уже летит на&nbsp;указанную почту. Если его нет во&nbsp;«Входящих» через пару минут, загляните в&nbsp;папку «Спам» или «Промоакции».</p>
+          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Письмо с книгой отправлено на&nbsp;указанную почту. Если его нет во&nbsp;«Входящих» через пару минут, загляните в&nbsp;папку «Спам» или «Промоакции».</p>
+          <div style="{{ bookResendStyle }}">
+            <button onClick="{{ onResendBook }}" style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; padding: 13px 22px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; color: #1C1A19; cursor: pointer; margin-top: 18px;">Письмо не пришло? Отправить ещё раз</button>
+          </div>
+          <div style="{{ bookResentStyle }}">
+            <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch; margin-top: 14px;">Отправили ещё раз. Если и&nbsp;это письмо не&nbsp;дойдёт, скачайте материалы прямо здесь:</p>
+          </div>
+        </div>
+        <div style="{{ bookFailedStyle }}">
+          <p style="font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.6vw, 24px); margin: 0 0 14px;">Не получилось отправить письмо</p>
+          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Проверьте, верно&nbsp;ли указана почта, и&nbsp;попробуйте ещё раз.</p>
+          <button onClick="{{ onResendBook }}" style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; padding: 13px 22px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; color: #1C1A19; cursor: pointer; margin-top: 18px;">Попробовать ещё раз</button>
+        </div>
+        <div style="{{ bookFallbackStyle }}">
+          <div style="{{ bookFallbackNoteStyle }}">
+            <p style="font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.6vw, 24px); margin: 0 0 14px;">Письмо отправить не&nbsp;удалось</p>
+            <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Но&nbsp;это не&nbsp;беда — скачайте книгу прямо здесь:</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px; max-width: 460px; margin-top: 16px;">
+            <a href="{{ bookFileHref }}" download="" target="_blank" rel="noopener" class="arrow-nudge" style="{{ bookFileStyle }}" style-hover="border-color:#B26E7A; background:#FAEDEF;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B26E7A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+              {{ bookFileLabel }}
+            </a>
+          </div>
+        </div>
         </div>
       </div>
 
@@ -568,7 +624,11 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { menuOpen: false, book: 0, reviewOpen: false, reviewSending: false, reviewDone: false, guidesSent: false, bookSent: false };
+  // Шаг выдачи материалов: idle → sending → sent / resent / failed / fallback
+  state = {
+    menuOpen: false, book: 0, reviewOpen: false, reviewSending: false, reviewDone: false,
+    guides: { step: 'idle', lead: null }, bookLead: { step: 'idle', lead: null },
+  };
 
   // URL Cloudflare Worker: принимает отзывы и пересылает их в Telegram.
   WORKER_ENDPOINT = 'https://sestram-reviews.dvaarbyza.workers.dev';
@@ -578,8 +638,17 @@ class Component extends DCLogic {
   // Пока стоит ВСТАВИТЬ_URL — отправка пропускается, файлы всё равно выдаются.
   SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzsVZU9bCDBGr9WEO2HiKX-2fBUIHPndjk5l04n9Ir5SAXt2Ji_ZHfZAzPor94PDaYQrg/exec';
 
-  // Файлы больше не скачиваются с сайта — они уходят письмом.
-  // Ссылки на них живут в google-sheets/Code.gs (GUIDE_FILES и BOOK_FILE).
+  // Материалы выдаются письмом. Эти ссылки — запасной вариант: показываются
+  // на сайте, только если письмо отправить не удалось.
+  // Те же ссылки продублированы в google-sheets/Code.gs.
+  GUIDE_FILES = [
+    { label: '5 причин, по которым ты ничего не успеваешь', href: 'downloads/guide-1.pdf' },
+    { label: 'Как выполнять запланированное', href: 'downloads/guide-2.pdf' },
+    { label: 'Как победить прокрастинацию', href: 'downloads/guide-3.pdf' },
+    { label: 'Как вставать рано', href: 'downloads/guide-4.pdf' },
+    { label: 'Мои секреты продуктивности', href: 'downloads/guide-5.pdf' },
+  ];
+  BOOK_FILE = { label: 'Справочник постящейся (PDF)', href: 'https://drive.google.com/uc?export=download&id=11ygUPBreZKZW65kqDWVd9o9uk4B7GbwN' };
 
   BOOK = [
     { cap: 'Обложка' },
@@ -638,19 +707,79 @@ class Component extends DCLogic {
 
   // Сбор контактов в Google-таблицу + отправка материалов письмом.
   // Данные уходят в Apps Script Web App, он пишет заявку в таблицу и шлёт письмо.
-  onSubmitLead = (magnet) => (e) => {
+  LEAD_KEY = (magnet) => (magnet === 'guides' ? 'guides' : 'bookLead');
+  MAGNET_LABEL = (magnet) => (magnet === 'guides' ? 'Гайды по планированию' : 'Справочник постящейся');
+
+  setLead = (magnet, patch) => {
+    const key = this.LEAD_KEY(magnet);
+    this.setState((st) => ({ [key]: Object.assign({}, st[key], patch) }));
+  };
+
+  // Просит Apps Script записать заявку и отправить письмо.
+  // Возвращает true, только если письмо действительно ушло.
+  deliver = async (magnet, lead) => {
+    if (this.SHEET_ENDPOINT.indexOf('ВСТАВИТЬ') !== -1) return false;
+    try {
+      const body = new URLSearchParams({
+        name: lead.name, email: lead.email, magnet: this.MAGNET_LABEL(magnet),
+      });
+      const res = await fetch(this.SHEET_ENDPOINT, { method: 'POST', body: body });
+      if (!res.ok) return false;
+      const data = await res.json();
+      return !!(data && data.ok && String(data.mail || '').indexOf('отправлено') === 0);
+    } catch (err) {
+      return false;
+    }
+  };
+
+  onSubmitLead = (magnet) => async (e) => {
     e.preventDefault();
     const form = e.target;
     const get = (n) => { const el = form.querySelector('[name=' + n + ']'); return el ? String(el.value || '').trim() : ''; };
     const lead = { name: get('name'), email: get('email') };
-    if (this.SHEET_ENDPOINT.indexOf('ВСТАВИТЬ') === -1) {
-      const magnetLabel = magnet === 'guides' ? 'Гайды по планированию' : 'Справочник постящейся';
-      const body = new URLSearchParams({
-        name: lead.name, email: lead.email, magnet: magnetLabel,
-      });
-      fetch(this.SHEET_ENDPOINT, { method: 'POST', mode: 'no-cors', body: body }).catch(() => {});
-    }
-    this.setState(magnet === 'guides' ? { guidesSent: true } : { bookSent: true });
+
+    this.setLead(magnet, { step: 'sending', lead: lead });
+    const ok = await this.deliver(magnet, lead);
+    // Не ушло с первого раза — предлагаем повторить.
+    this.setLead(magnet, { step: ok ? 'sent' : 'failed' });
+  };
+
+  // Повтор: и по кнопке «письмо не пришло», и после неудачной отправки.
+  // Если и теперь не вышло — показываем файлы прямо на сайте.
+  onResend = (magnet) => async () => {
+    const current = this.state[this.LEAD_KEY(magnet)];
+    const lead = current && current.lead;
+    if (!lead) return;
+    const wasSent = current.step === 'sent';
+
+    this.setLead(magnet, { step: 'sending' });
+    const ok = await this.deliver(magnet, lead);
+    this.setLead(magnet, { step: ok && !wasSent ? 'sent' : (ok ? 'resent' : 'fallback') });
+  };
+
+  DL_LINK_STYLE = [
+    'display:flex', 'align-items:center', 'gap:10px',
+    'font-family:\'Manrope\',sans-serif', 'font-size:15px', 'font-weight:600',
+    'padding:14px 20px', 'border:1px solid #E4D6D1', 'border-radius:12px',
+    'background:#FFFFFF', 'color:#1C1A19',
+  ].join(';') + ';';
+
+  // Какие блоки показывать на каждом шаге выдачи.
+  leadProps = (magnet) => {
+    const step = (this.state[this.LEAD_KEY(magnet)] || {}).step || 'idle';
+    const show = (on) => 'display:' + (on ? 'block' : 'none') + ';';
+    const p = magnet === 'guides' ? 'guides' : 'book';
+    const out = {};
+    out[p + 'FormStyle'] = show(step === 'idle');
+    out[p + 'SendingStyle'] = show(step === 'sending');
+    out[p + 'DoneStyle'] = show(step === 'sent' || step === 'resent');
+    out[p + 'ResendStyle'] = show(step === 'sent');
+    out[p + 'ResentStyle'] = show(step === 'resent');
+    out[p + 'FailedStyle'] = show(step === 'failed');
+    out[p + 'FallbackStyle'] = show(step === 'fallback' || step === 'resent');
+    out[p + 'FallbackNoteStyle'] = show(step === 'fallback');
+    out['onResend' + (magnet === 'guides' ? 'Guides' : 'Book')] = this.onResend(magnet);
+    return out;
   };
 
   stopProp = (e) => { if (e && e.stopPropagation) e.stopPropagation(); };
@@ -689,17 +818,17 @@ class Component extends DCLogic {
     const g = this.state.guide || 0;
     const rOpen = this.state.reviewOpen;
     const rDone = this.state.reviewDone;
-    const guidesSent = this.state.guidesSent;
-    const bookSent = this.state.bookSent;
     return {
       toggleMenu: this.toggleMenu,
       closeMenu: this.closeMenu,
       onSubmitGuides: this.onSubmitLead('guides'),
       onSubmitBook: this.onSubmitLead('book'),
-      guidesFormStyle: 'display:' + (guidesSent ? 'none' : 'block') + ';',
-      guidesDoneStyle: 'display:' + (guidesSent ? 'block' : 'none') + ';',
-      bookFormStyle: 'display:' + (bookSent ? 'none' : 'block') + ';',
-      bookDoneStyle: 'display:' + (bookSent ? 'block' : 'none') + ';',
+      ...this.leadProps('guides'),
+      ...this.leadProps('book'),
+      guideFiles: this.GUIDE_FILES.map((f) => ({ href: f.href, label: f.label, style: this.DL_LINK_STYLE })),
+      bookFileHref: this.BOOK_FILE.href,
+      bookFileLabel: this.BOOK_FILE.label,
+      bookFileStyle: this.DL_LINK_STYLE,
       openReview: this.openReview,
       closeReview: this.closeReview,
       stopProp: this.stopProp,

@@ -43,7 +43,7 @@ var MAIL_FROM = 'noreply@urokisestram.com';
 var RESEND_ENDPOINT = 'https://api.resend.com/emails';
 
 // Куда писать, если возникли вопросы (отвечать на письмо нельзя).
-var TELEGRAM_URL = 'https://t.me/sestram';
+var TELEGRAM_URL = 'https://t.me/solihasestram';
 
 // Адрес сайта (для ссылок на гайды).
 var SITE_URL = 'https://urokisestram.com';
@@ -204,8 +204,8 @@ function buildMagnetText_(name, isBook, files) {
   lines.push('Ссылки не истекают — можно вернуться к ним в любое время.');
   lines.push('');
   lines.push('Это письмо отправлено автоматически, отвечать на него не нужно:');
-  lines.push('адрес не принимает входящие. Если что-то не открылось, напишите нам');
-  lines.push('в Telegram: ' + TELEGRAM_URL);
+  lines.push('адрес не принимает входящие. Если что-то не открылось, напишите мне');
+  lines.push('в Telegram: ' + telegramHandle_() + ' — ' + TELEGRAM_URL);
   lines.push('');
   lines.push('Баракаллаху фикум,');
   lines.push(MAIL_FROM_NAME);
@@ -237,15 +237,20 @@ function buildMagnetHtml_(name, isBook, files) {
           '<p style="margin:0 0 24px;font-size:15px;line-height:1.65;color:#5C5653;">' + escapeHtml_(intro) + '</p>' +
           '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">' + items + '</table>' +
           '<p style="margin:22px 0 0;font-size:14px;line-height:1.65;color:#5C5653;">Ссылки не истекают — можно вернуться к ним в любое время.</p>' +
-          '<p style="margin:14px 0 0;font-size:13px;line-height:1.6;color:#8A817C;">Это письмо отправлено автоматически, отвечать на него не нужно: адрес не&nbsp;принимает входящие. Если что-то не&nbsp;открылось, напишите нам в&nbsp;<a href="' + TELEGRAM_URL + '" style="color:#B26E7A;text-decoration:none;">Telegram</a>.</p>' +
+          '<p style="margin:14px 0 0;font-size:13px;line-height:1.6;color:#8A817C;">Это письмо отправлено автоматически, отвечать на него не нужно: адрес не&nbsp;принимает входящие. Если что-то не&nbsp;открылось, напишите мне в&nbsp;<a href="' + TELEGRAM_URL + '" style="color:#B26E7A;text-decoration:none;">Telegram</a>.</p>' +
           '<p style="margin:26px 0 0;font-size:14px;line-height:1.7;color:#5C5653;">Баракаллаху фикум,<br>' +
             '<span style="color:#1C1A19;">' + escapeHtml_(MAIL_FROM_NAME) + '</span><br>' +
             '<a href="' + SITE_URL + '" style="color:#B26E7A;text-decoration:none;">' + SITE_URL.replace('https://', '') + '</a><br>' +
-            '<a href="' + TELEGRAM_URL + '" style="color:#B26E7A;text-decoration:none;">' + TELEGRAM_URL.replace('https://', '') + '</a>' +
+            '<a href="' + TELEGRAM_URL + '" style="color:#B26E7A;text-decoration:none;">' + telegramHandle_() + '</a>' +
           '</p>' +
         '</td></tr>' +
       '</table>' +
     '</div>';
+}
+
+/** Ник в Telegram из ссылки: https://t.me/solihasestram → @solihasestram */
+function telegramHandle_() {
+  return '@' + String(TELEGRAM_URL).replace(/^https?:\/\/t\.me\//, '').replace(/\/$/, '');
 }
 
 /** Экранирование текста, который подставляется в HTML письма. */
