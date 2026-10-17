@@ -32,13 +32,18 @@ var HEADERS = ['Дата', 'Материал', 'Имя', 'Почта', 'Теле
 
 // Имя и адрес отправителя, которые увидит получатель.
 var MAIL_FROM_NAME = 'Уроки Сёстрам';
-var MAIL_FROM = 'info@urokisestram.com';
+var MAIL_FROM = 'noreply@urokisestram.com';
 
 // Письма уходят через Resend (resend.com) — так адрес отправителя принадлежит
 // домену, а личная почта владельца нигде не показывается.
+// Адрес noreply@ входящие НЕ принимает: в письме об этом сказано, а для связи
+// даётся Telegram (TELEGRAM_URL).
 // Ключ хранится в настройках скрипта, НЕ в коде:
 // Apps Script → ⚙️ Настройки проекта → Свойства скрипта → RESEND_API_KEY.
 var RESEND_ENDPOINT = 'https://api.resend.com/emails';
+
+// Куда писать, если возникли вопросы (отвечать на письмо нельзя).
+var TELEGRAM_URL = 'https://t.me/sestram';
 
 // Адрес сайта (для ссылок на гайды).
 var SITE_URL = 'https://urokisestram.com';
@@ -197,7 +202,10 @@ function buildMagnetText_(name, isBook, files) {
   }
   lines.push('');
   lines.push('Ссылки не истекают — можно вернуться к ним в любое время.');
-  lines.push('Если что-то не открылось, просто ответьте на это письмо.');
+  lines.push('');
+  lines.push('Это письмо отправлено автоматически, отвечать на него не нужно:');
+  lines.push('адрес не принимает входящие. Если что-то не открылось, напишите нам');
+  lines.push('в Telegram: ' + TELEGRAM_URL);
   lines.push('');
   lines.push('Баракаллаху фикум,');
   lines.push(MAIL_FROM_NAME);
@@ -228,11 +236,12 @@ function buildMagnetHtml_(name, isBook, files) {
           '<p style="margin:0 0 18px;font-size:16px;line-height:1.6;">' + escapeHtml_(greeting_(name)) + '</p>' +
           '<p style="margin:0 0 24px;font-size:15px;line-height:1.65;color:#5C5653;">' + escapeHtml_(intro) + '</p>' +
           '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">' + items + '</table>' +
-          '<p style="margin:22px 0 0;font-size:14px;line-height:1.65;color:#5C5653;">Ссылки не истекают — можно вернуться к ним в любое время. Если что-то не открылось, просто ответьте на это письмо.</p>' +
+          '<p style="margin:22px 0 0;font-size:14px;line-height:1.65;color:#5C5653;">Ссылки не истекают — можно вернуться к ним в любое время.</p>' +
+          '<p style="margin:14px 0 0;font-size:13px;line-height:1.6;color:#8A817C;">Это письмо отправлено автоматически, отвечать на него не нужно: адрес не&nbsp;принимает входящие. Если что-то не&nbsp;открылось, напишите нам в&nbsp;<a href="' + TELEGRAM_URL + '" style="color:#B26E7A;text-decoration:none;">Telegram</a>.</p>' +
           '<p style="margin:26px 0 0;font-size:14px;line-height:1.7;color:#5C5653;">Баракаллаху фикум,<br>' +
             '<span style="color:#1C1A19;">' + escapeHtml_(MAIL_FROM_NAME) + '</span><br>' +
             '<a href="' + SITE_URL + '" style="color:#B26E7A;text-decoration:none;">' + SITE_URL.replace('https://', '') + '</a><br>' +
-            '<a href="mailto:' + MAIL_FROM + '" style="color:#B26E7A;text-decoration:none;">' + escapeHtml_(MAIL_FROM) + '</a>' +
+            '<a href="' + TELEGRAM_URL + '" style="color:#B26E7A;text-decoration:none;">' + TELEGRAM_URL.replace('https://', '') + '</a>' +
           '</p>' +
         '</td></tr>' +
       '</table>' +
