@@ -342,7 +342,7 @@
         </div>
         <div style="{{ guidesDoneStyle }}">
           <p style="font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.6vw, 24px); margin: 0 0 14px;">ДжазакиЛлаху хайран!</p>
-          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Письмо с гайдами отправлено на&nbsp;указанную почту. Если его нет во&nbsp;«Входящих» через пару минут, загляните в&nbsp;папку «Спам» или «Промоакции».</p>
+          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Письмо с гайдами отправлено на&nbsp;<strong style="color: #1C1A19;">{{ guidesEmail }}</strong>. Если его нет во&nbsp;«Входящих» через пару минут, загляните в&nbsp;папку «Спам» или «Промоакции».</p>
           <div style="{{ guidesResendStyle }}">
             <button onClick="{{ onResendGuides }}" style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; padding: 13px 22px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; color: #1C1A19; cursor: pointer; margin-top: 18px;">Письмо не пришло? Отправить ещё раз</button>
           </div>
@@ -352,8 +352,11 @@
         </div>
         <div style="{{ guidesFailedStyle }}">
           <p style="font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.6vw, 24px); margin: 0 0 14px;">Не получилось отправить письмо</p>
-          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Проверьте, верно&nbsp;ли указана почта, и&nbsp;попробуйте ещё раз.</p>
-          <button onClick="{{ onResendGuides }}" style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; padding: 13px 22px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; color: #1C1A19; cursor: pointer; margin-top: 18px;">Попробовать ещё раз</button>
+          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Письмо для <strong style="color: #1C1A19;">{{ guidesEmail }}</strong> не&nbsp;ушло. Проверьте, верно&nbsp;ли указан адрес, и&nbsp;попробуйте ещё раз.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+            <button onClick="{{ onResendGuides }}" style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; padding: 13px 22px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; color: #1C1A19; cursor: pointer;">Попробовать ещё раз</button>
+            <button onClick="{{ onEditGuides }}" style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; padding: 13px 22px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; color: #1C1A19; cursor: pointer; background: transparent; border-color: transparent; color: #8A817C; padding-left: 4px; padding-right: 4px;">Указать другую почту</button>
+          </div>
         </div>
         <div style="{{ guidesFallbackStyle }}">
           <div style="{{ guidesFallbackNoteStyle }}">
@@ -429,7 +432,7 @@
         </div>
         <div style="{{ bookDoneStyle }}">
           <p style="font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.6vw, 24px); margin: 0 0 14px;">ДжазакиЛлаху хайран!</p>
-          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Письмо с книгой отправлено на&nbsp;указанную почту. Если его нет во&nbsp;«Входящих» через пару минут, загляните в&nbsp;папку «Спам» или «Промоакции».</p>
+          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Письмо с книгой отправлено на&nbsp;<strong style="color: #1C1A19;">{{ bookEmail }}</strong>. Если его нет во&nbsp;«Входящих» через пару минут, загляните в&nbsp;папку «Спам» или «Промоакции».</p>
           <div style="{{ bookResendStyle }}">
             <button onClick="{{ onResendBook }}" style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; padding: 13px 22px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; color: #1C1A19; cursor: pointer; margin-top: 18px;">Письмо не пришло? Отправить ещё раз</button>
           </div>
@@ -439,8 +442,11 @@
         </div>
         <div style="{{ bookFailedStyle }}">
           <p style="font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.6vw, 24px); margin: 0 0 14px;">Не получилось отправить письмо</p>
-          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Проверьте, верно&nbsp;ли указана почта, и&nbsp;попробуйте ещё раз.</p>
-          <button onClick="{{ onResendBook }}" style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; padding: 13px 22px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; color: #1C1A19; cursor: pointer; margin-top: 18px;">Попробовать ещё раз</button>
+          <p style="font-size: 15px; line-height: 1.65; color: #5C5653; margin: 0; max-width: 46ch;">Письмо для <strong style="color: #1C1A19;">{{ bookEmail }}</strong> не&nbsp;ушло. Проверьте, верно&nbsp;ли указан адрес, и&nbsp;попробуйте ещё раз.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+            <button onClick="{{ onResendBook }}" style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; padding: 13px 22px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; color: #1C1A19; cursor: pointer;">Попробовать ещё раз</button>
+            <button onClick="{{ onEditBook }}" style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; padding: 13px 22px; border: 1px solid #E4D6D1; border-radius: 12px; background: #FFFFFF; color: #1C1A19; cursor: pointer; background: transparent; border-color: transparent; color: #8A817C; padding-left: 4px; padding-right: 4px;">Указать другую почту</button>
+          </div>
         </div>
         <div style="{{ bookFallbackStyle }}">
           <div style="{{ bookFallbackNoteStyle }}">
@@ -744,6 +750,9 @@ class Component extends DCLogic {
     this.setLead(magnet, { step: ok ? 'sent' : 'failed' });
   };
 
+  // Вернуться к форме, чтобы поправить почту. Введённое остаётся в полях.
+  onEditLead = (magnet) => () => this.setLead(magnet, { step: 'idle' });
+
   // Повтор: и по кнопке «письмо не пришло», и после неудачной отправки.
   // Если и теперь не вышло — показываем файлы прямо на сайте.
   onResend = (magnet) => async () => {
@@ -778,7 +787,10 @@ class Component extends DCLogic {
     out[p + 'FailedStyle'] = show(step === 'failed');
     out[p + 'FallbackStyle'] = show(step === 'fallback' || step === 'resent');
     out[p + 'FallbackNoteStyle'] = show(step === 'fallback');
-    out['onResend' + (magnet === 'guides' ? 'Guides' : 'Book')] = this.onResend(magnet);
+    const suffix = magnet === 'guides' ? 'Guides' : 'Book';
+    out['onResend' + suffix] = this.onResend(magnet);
+    out['onEdit' + suffix] = this.onEditLead(magnet);
+    out[p + 'Email'] = ((this.state[this.LEAD_KEY(magnet)] || {}).lead || {}).email || '';
     return out;
   };
 
